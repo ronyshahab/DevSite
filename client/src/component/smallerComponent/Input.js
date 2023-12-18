@@ -18,7 +18,9 @@ const Input = ({
     <>
       {inputType == "normal" && (
         <div>
-            <label htmlFor={name} className="label" >{title}</label>
+          <label htmlFor={name} className="label">
+            {title}
+          </label>
           <input
             type={type}
             value={value}
@@ -27,27 +29,39 @@ const Input = ({
             onBlur={onBlur}
             onChange={onChange}
           ></input>
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          {error && (
+            <p style={{ color: "red" }}>
+              <small> *{error} </small>
+            </p>
+          )}
         </div>
       )}
-       {inputType == "textarea" && (
+      {inputType == "textarea" && (
         <div>
-             <label htmlFor={name} className="label" >{title}</label>
+          <label htmlFor={name} className="label">
+            {title}
+          </label>
           <textarea
-              value={value}
-              cols={5}
-              rows={10}
-              placeholder={placeholder}
-              name={name}
-              onBlur={onBlur}
-              onChange={onChange}
-            ></textarea>
-          {error && <p style={{ color: "red" }}>{error}</p>}
+            value={value}
+            cols={5}
+            rows={10}
+            placeholder={placeholder}
+            name={name}
+            onBlur={onBlur}
+            onChange={onChange}
+          ></textarea>
+          {error && (
+            <p style={{ color: "red" }}>
+              <small> *{error} </small>
+            </p>
+          )}
         </div>
       )}
-        {inputType == "checkbox" && (
+      {inputType == "checkbox" && (
         <div>
-            <label htmlFor={name} className="label" >{title}</label>
+          <h4 htmlFor={name} className="label mr-2">
+            {title}
+          </h4>
           <input
             type={inputType}
             checked={value}
@@ -55,28 +69,35 @@ const Input = ({
             onBlur={onBlur}
             onChange={onChange}
           ></input>
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          {error && (
+            <p style={{ color: "red" }}>
+              <small className="text-muted"> *{error} </small>
+            </p>
+          )}
         </div>
       )}
-      {
-        inputType == "dropdown" && (
-          <div>
-             <select
-              name="status"
-              value={value}
-              onChange={onChange}
-              onBlur={onBlur}
-              options={options}
-            >
-              {
-                options.map((i)=>{
-                 return <option key={i} value={i=="Select Professional Status"? "Fresher": i}>{i}</option>
-                })
-              }
-            </select>
-          </div>
-        )
-      }
+      {inputType == "dropdown" && (
+        <div>
+          <select
+            name="status"
+            value={value}
+            onChange={onChange}
+            onBlur={onBlur}
+            options={options}
+          >
+            {options.map((i) => {
+              return (
+                <option
+                  key={i}
+                  value={i == "Select Professional Status" ? "Fresher" : i}
+                >
+                  {i}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+      )}
     </>
   );
 };

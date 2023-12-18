@@ -1,10 +1,9 @@
-import React from 'react';
-import Actions from './Actions';
+import React from "react";
+import Actions from "./Actions";
 
-const TableBody = ({ data ,getUserData, updateUser}) => {
+const TableBody = ({ data, getUserData, updateUser }) => {
   // const value = Object.values(data[0])
   // console.log(value)
-  console.log(data)
   return (
     <>
       {data.map((item, index) => {
@@ -15,7 +14,11 @@ const TableBody = ({ data ,getUserData, updateUser}) => {
               return <td key={itemIndex}>{itemText}</td>;
             })}
             <td>
-              <Actions data={item} getUserData={getUserData} updateUser={updateUser} />
+              <Actions
+                data={item}
+                getUserData={getUserData}
+                updateUser={updateUser}
+              />
             </td>
           </tr>
         );

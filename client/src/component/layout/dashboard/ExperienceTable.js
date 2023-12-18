@@ -2,20 +2,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   capitalize,
-  dateFormate
+  dateFormate,
 } from "../../../commonFunction/commonFunction";
 import { setEducationFormData } from "../../../redux/actions/actions";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import getData from "../../../commonFunction/getDataFromAxios";
-import TableHeader from "../table/TableHeader";
-import TableBody from "../table/TableBody";
+
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.css";
 const ExperienceTable = ({ data }) => {
-  // console.log(data);
   const tableInheritorRef = useRef();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [tableBodyValue, setTableBodyValue] = useState([])
+  const [tableBodyValue, setTableBodyValue] = useState([]);
   const handleUpdateIcon = async (data) => {
     const updatable = true;
 
@@ -23,13 +23,26 @@ const ExperienceTable = ({ data }) => {
 
     navigate(`/add-experience/${updatable}`);
   };
+  const showAlert = async () => {
+    const result = await Swal.fire({
+      title: "Item will be deleted permanently?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "Cancel",
+    });
+
+    if (result.isConfirmed) {
+      return true;
+    } else if (result.isDismissed) {
+      return false;
+    }
+  };
   const handleDeleteIcon = async (data) => {
-    console.log(data);
-    if (confirm("Do you want to delete the education?")) {
+    if (await showAlert()) {
       try {
         const res = await getData("delete", `/profile/experience/${data}`);
         location.reload();
-        console.log(res);
       } catch (error) {
         console.log(error.message);
       }
@@ -67,7 +80,6 @@ const ExperienceTable = ({ data }) => {
     table.appendChild(tr);
     result.forEach((i) => {
       const data = Object.values(i);
-      // console.log(data)
       //   const object = formateObject(header, data)
       //   console.log(object)
       const tr = document.createElement("tr");
@@ -82,6 +94,11 @@ const ExperienceTable = ({ data }) => {
           td.appendChild(text);
         } else if (j == 4) {
           let text = document.createTextNode(dateFormate(data[j]));
+          td.appendChild(text);
+        } else if (j == 5) {
+          let text = document.createTextNode(
+            data[j] ? "Working" : "Not working"
+          );
           td.appendChild(text);
         } else if (j == 6) {
           let description = data[j];
@@ -121,26 +138,25 @@ const ExperienceTable = ({ data }) => {
   };
 
   useEffect(() => {
-    setTableBodyValue(data.map((element) =>{
-      const array = Object.values(element)
-      array.pop()
-    } ));
-  }, []);
-
+    setTableBodyValue(
+      data.map((element) => {
+        const array = Object.values(element);
+        array.pop();
+        return array;
+      })
+    );
+    if (data !== undefined && data !== null && data.length !== 0) {
+      load();
+    }
+  }, [data]);
 
   return (
     <>
-    <table>
-      <tbody>
-      <TableHeader data={data}/>
-      <TableBody data={tableBodyValue} getUserData={handleDeleteIcon} updateUser={handleUpdateIcon}/>
-      </tbody>
-    </table>
-    {/* <div
-      className="eduTableContainer"
-      id="eduTableContainer"
-      ref={tableInheritorRef}
-    ></div> */}
+      <div
+        className="eduTableContainer"
+        id="eduTableContainer"
+        ref={tableInheritorRef}
+      ></div>
     </>
   );
 };

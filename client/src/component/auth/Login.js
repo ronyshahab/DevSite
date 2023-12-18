@@ -1,158 +1,200 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import {toast} from 'react-toastify'
+import { toast } from "react-toastify";
 import axios from "axios";
-import {useNavigate} from "react-router-dom"
-import Modal from 'react-bootstrap/Modal';
+import { useNavigate } from "react-router-dom";
+import { Modal, Form, Button, FormGroup } from "react-bootstrap";
 import { Alert } from "../smallerComponent/Toast";
+import { useFormik } from "formik";
+import { loginSchema } from "../../validation/Validation";
+import LoginImage from "../../assets/illustration-cartoon-female-user-entering-login_241107-682.avif";
 const bcrypt = require("bcryptjs");
 
+function Login({ show, handleClose, openRegister }) {
+  const navigate = useNavigate();
 
-function Login() {
-  
-  // **creating hooks Instance
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  let TOKEN;
 
-  let TOKEN
+  const getUser = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      Alert("error", "No token found", "light");
+      return;
+    }
+    try {
+      const user = await axios.get(`http://localhost:5000/api/profile/me`, {
+        headers: {
+          token,
+        },
+      });
+      console.log(user.response.status);
+      if (user.response.status !== 200) {
+        console.log("something went bad");
+        navigate("/dashboard");
+      }
+      return user;
+    } catch (error) {
+      console.log(error);
+    }
+    // const user = allUser.data[0];
+  };
 
+  const getToken = async (value) => {
+    const { email, password } = value;
+    try {
+      const data = await axios.post(`http://localhost:5000/api/auth`, {
+        email,
+        password,
+      });
 
-  // **state for storing form Data
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+      TOKEN = data.data.token;
+      localStorage.setItem("token", TOKEN);
+      if (formik.values.rememberMe) {
+        localStorage.setItem("email", formik.values.email);
+        localStorage.setItem("password", formik.values.password);
+        localStorage.setItem("rememberMe", formik.values.rememberMe);
+      } else {
+        localStorage.setItem("email", "");
+        localStorage.setItem("password", "");
+        localStorage.setItem("rememberMe", "");
+      }
+      navigate("/posts");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const validator = async (userData, registerData) => {
+    if (userData !== undefined && registerData !== undefined) {
+      const userPassword = userData.password;
+      const registerPassword = registerData.password;
+
+      const result = await bcrypt.compare(registerPassword, userPassword);
+      if (result) {
+        localStorage.setItem("user", userData._id);
+        Alert("success", "Login Successfull");
+      }
+
+      if (!result) {
+        Alert("error", "Wrong Creadtial", "light");
+      }
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    let result = "";
+    result = await getUser(e.email);
+    if (result !== "") {
+      getToken(e);
+      validator(result, formik.values);
+    }
+  };
+
+  const toggleRememberMe = () => {
+    formik.setValues({
+      email: formik.values.email,
+      password: formik.values.password,
+      rememberMe: !formik.values.rememberMe,
+    });
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      email: localStorage.getItem("email") ? localStorage.getItem("email") : "",
+      password: localStorage.getItem("password")
+        ? localStorage.getItem("password")
+        : "",
+      rememberMe: localStorage.getItem("rememberMe") ? true : false,
+    },
+    validationSchema: loginSchema,
+    onSubmit: handleSubmit,
   });
 
-
-  // **destructor email and password property from form data state
-  const { email, password } = formData;
-
-  
-  // **function created to get data of the specific user
-  const getUser = async (email) => {
-    const allUser = await axios.get(`http://localhost:5000/api/user/${email}`);
-    const user = allUser.data[0];
-    return user;
-  };
-
-
-  // **function created to store the token generated into local storage
-  const getToken = async (email, password) =>{
-    try {
-      // sending user login data to the api
-      const data = await axios.post(`http://localhost:5000/api/auth`, {email , password})
-      
-      // setting token into the localStorage
-      TOKEN = data.data.token
-      localStorage.setItem('token', TOKEN)
-      
-      // navigating to the profile page
-      navigate("/profile")
-     
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
-
-
-  // **validator function to check login successfull or not
-  const validator = async(userData, registerData) => {
-    
-    // checking the availablity of the userData 
-    if(userData!== undefined && registerData!== undefined){
-      const userPassword = userData.password
-      const registerPassword = registerData.password
-      
-      // comapring the passwords to check user authenticity
-      const result = await bcrypt.compare(registerPassword, userPassword);
-      
-      // user login succesfull
-      if(result){
-        
-        localStorage.setItem("user" , userData._id)
-        Alert('success', "Login Successfull")
-      }
-
-      // user login failed
-      if(!result){
-        console.log("Alert is called")
-        Alert( 'error',"Wrong Creadtial", "light")
-        
-      }
-
-      // userData not available
-    
-    }
-   };
-
-
-  // **function to maintain the value of state in form
-   const onChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  
-  // **submit function for form 
-  const onSubmit = async(e) => {
-    e.preventDefault();
-    let result =""
-     result = await getUser(email)
-    if(result !== ""){
-      
-      getToken(email, password)
-      validator(result, formData)
-    }
-  };
-
   return (
-    <div>
-jj
-      <section className="container">
-        <Modal>
-        {/* <Alert/> */}
-        <Modal.Header closeButton>
-        <h1 className="large text-primary">Sign In</h1>
-        <Modal.Title>
-        <p className="lead">
-          <i className="fas fa-user"></i> Sign into your account
-        </p>
-        </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-        <form
-          action="dashboard.html"
-          className="form"
-          onSubmit={(e) => onSubmit(e)}
-        >
-          <div className="form-group">
-            <input
-              type="email"
-              placeholder="Email Address"
-              name="email"
-              value={email}
-              onChange={(e) => onChange(e)}
-            />
+    <Modal show={show} size="lg">
+      <div className="modalHeaderContainer">
+        <div>
+          <h1>Login In</h1>
+          <small>
+            Not have account?{" "}
+            <a onClick={openRegister}>
+              {" "}
+              <span className="text-primary"> sign in </span>
+            </a>{" "}
+          </small>
+        </div>
+      </div>
+      <Modal.Body>
+        <div className="modalBodyContainer">
+          <div className="formContainer">
+            <Form onSubmit={formik.handleSubmit}>
+              <Form.Group controlId="formEmail" className="mb-3">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="email"
+                  onChange={formik.handleChange}
+                  placeholder="Enter email"
+                  value={formik.values.email}
+                  isInvalid={formik?.errors?.email && formik.touched.email}
+                  onBlur={formik.handleBlur}
+                />
+                {formik.touched.email && formik.errors.email && (
+                  <Form.Control.Feedback type="invalid">
+                    <small style={{ color: "red" }}>
+                      *{formik.errors.email}
+                    </small>
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="formBasicPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  name="password"
+                  onChange={formik.handleChange}
+                  placeholder="Password"
+                  value={formik.values.password}
+                  isInvalid={
+                    formik?.errors?.password && formik.touched.password
+                  }
+                  onBlur={formik.handleBlur}
+                />
+                {formik.touched.password && formik.errors.password && (
+                  <Form.Control.Feedback type="invalid">
+                    <small style={{ color: "red" }}>
+                      *{formik.errors.password}
+                    </small>
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+
+              <FormGroup className="mb-3" controlId="formBasicPassword">
+                <Form.Check
+                  name="rememberMe"
+                  checked={formik.values.rememberMe}
+                  onChange={toggleRememberMe}
+                />{" "}
+                <span>RememberMe </span>
+              </FormGroup>
+
+              <Button variant="primary" type="submit">
+                Submit
+              </Button>
+
+              <Button variant="danger" onClick={handleClose}>
+                Go back
+              </Button>
+            </Form>
           </div>
-          <div className="form-group">
-            <input
-              type="password"
-              placeholder="Password"
-              minLength="6"
-              name="password"
-              value={password}
-              onChange={(e) => onChange(e)}
-            />
+          <div className="modalImgContainer">
+            <img src={LoginImage}></img>
           </div>
-          <input type="submit" value="Login"  className="btn btn-primary" />
-        </form>
-        <p className="my-1">
-          Don't have an account? <Link to={"/register"}>Sign Up</Link>
-       </p>
-       </Modal.Body>
-       </Modal>
-      </section>
-    </div>
+        </div>
+      </Modal.Body>
+    </Modal>
   );
 }
 

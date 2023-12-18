@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { Link} from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
+import { Modal, Form, Button } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-
+import RegisterImage from "../../assets/photo-editing-software-illustration-design-concept-illustration-websites-landing-pages-mobile-applications-posters-banners_108061-917.avif";
 import axios from "axios";
+import { useFormik } from "formik";
+import { Alert } from "../smallerComponent/Toast";
 const bcrypt = require("bcryptjs");
-const Register = () => {
+const Register = ({ show, handleClose, openLogin }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -13,100 +15,121 @@ const Register = () => {
     password2: "",
   });
   const dispatch = useDispatch();
-  const getUser = async (email) => {
-    const allUser = await axios.get(`http://localhost:5000/api/user/${email}`);
-    const user = allUser.data[0];
-    return user;
+  const navigate = useNavigate();
+  const postUser = async (object) => {
+    try {
+      const res = await axios.post(`http://localhost:5000/api/user`, object);
+      if (res) {
+        Alert("success", "User registered Successfully");
+        navigate("/dashboard");
+      } else {
+        Alert("danger", "Something went wrong");
+      }
+    } catch (error) {
+      // console.log(error);
+      Alert("error", error.response.data.error);
+    }
   };
-  const validator = async(userData, registerData) => {
-   const userPassword = userData.password
-   const registerPassword = registerData.password
+  const validator = async (userData, registerData) => {
+    const userPassword = userData.password;
+    const registerPassword = registerData.password;
 
     const result = await bcrypt.compare(registerPassword, userPassword);
-     if(result){
-      // dispatch(setAlert(""))
-     }
-
-    
-    
+    if (result) {
+    }
   };
 
-  const handleChange = (e) => {
-    e.preventDefault();
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    const user = await postUser(formik.values);
 
-    const user = await getUser(formData.email);
-   
-    if(user){
+    if (user) {
       validator(user, formData);
     }
   };
 
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      password: "",
+      password2: "",
+    },
+    onSubmit: handleSubmit,
+  });
 
   return (
-    <>
-      <section className="container">
-        {/* <Alert /> */}
-        <h1 className="large text-primary">Sign Up</h1>
-        <p className="lead">
-          <i className="fas fa-user"></i> Create Your Account
-        </p>
-        <form className="form"  onSubmit={handleSubmit}>
-          <div className="form-group">
-            <input
-              type="text"
-              placeholder="Name"
-              name="name"
-              onChange={(e) => handleChange(e)}
-              required
-            />
+    <Modal show={show} size="lg">
+      <div className="modalHeaderContainer">
+        <div>
+          <h1>Sign Up</h1>
+          <small>
+            Already have an account?{" "}
+            <a onClick={openLogin}>
+              {" "}
+              <span className="text-primary"> login in </span>
+            </a>{" "}
+          </small>
+        </div>
+      </div>
+      <Modal.Body>
+        <div className="modalBodyContainer">
+          <div className="formContainer">
+            <Form onSubmit={formik.handleSubmit}>
+              <Form.Group className="mt-3">
+                <Form.Label>Name:</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Name"
+                  name="name"
+                  onChange={formik.handleChange}
+                  required
+                />
+              </Form.Group>
+              <Form.Group className="mt-3">
+                <Form.Label>Email:</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="Email Address"
+                  name="email"
+                  onChange={formik.handleChange}
+                />
+              </Form.Group>
+              <Form.Group className="mt-3">
+                <Form.Label>Password:</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Password"
+                  minLength="6"
+                  name="password"
+                  onChange={formik.handleChange}
+                />
+              </Form.Group>
+              <Form.Group className="mt-3">
+                <Form.Label>Confirm Password:</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Confirm Password"
+                  minLength="6"
+                  name="password2"
+                  onChange={formik.handleChange}
+                />
+              </Form.Group>
+              <div className="btnContiner" style={{ marginTop: "1em" }}>
+                <Button variant="primary" type="submit">
+                  Submit
+                </Button>
+                <Button variant="danger" onClick={handleClose}>
+                  Go back
+                </Button>
+              </div>
+            </Form>
           </div>
-          <div className="form-group">
-            <input
-              type="email"
-              placeholder="Email Address"
-              name="email"
-              onChange={(e) => handleChange(e)}
-            />
-            <small className="form-text">
-              This site uses Gravatar, so if you want a profile image, use a
-              Gravatar email
-            </small>
+          <div className="modalImgContainer">
+            <img src={RegisterImage} alt="" />
           </div>
-          <div className="form-group">
-            <input
-              type="password"
-              placeholder="Password"
-              minLength="6"
-              name="password"
-              onChange={(e) => handleChange(e)}
-            />
-          </div>
-          <div className="form-group">
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              minLength="6"
-              name="password2"
-              onChange={(e) => handleChange(e)}
-            />
-          </div>
-          <input
-            type="submit"
-            value="Register"
-            className="btn btn-primary"
-            name="submit"
-            onSubmit={(e) => handleSubmit(e)}
-          />
-        </form>
-        <p className="my-1">
-          Already have an account? <Link to={"/login"}>Sign In</Link>
-        </p>
-      </section>
-    </>
+        </div>
+      </Modal.Body>
+    </Modal>
   );
 };
 

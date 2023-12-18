@@ -1,3 +1,19 @@
+@font-face {
+  font-family: 'myFont';
+  src: url('./assets/Montserrat-VariableFont_wght.ttf') format('truetype'),
+       /* url('./assets/Montserrat-Italic-VariableFont_wght.ttf') format('truetype'); */
+  /* Add additional formats as needed */
+}
+body {
+  font-family: 'myFont' !important ;
+  font-size: 1rem;
+  line-height: 1.6;
+  background-color: #fff;
+  color: #333;
+}
+li a{
+  text-decoration: none;
+}
 .m-1 {
   margin: 1rem;
 }
@@ -62,8 +78,7 @@
   /* max-width: 1100px; */
   margin: auto;
   overflow: hidden;
-  padding: 0 2rem;
-  margin-top: 8rem;
+  margin-top: 5rem;
   margin-bottom: 3rem;
 }
 .x-large {
@@ -80,8 +95,18 @@
   font-size: 1.5rem;
   margin-bottom: 1rem;
 }
+.modalBodyContainer{
+  display: flex;
+  justify-content: center;
+}
+.formContainer{
+  flex: 7;
+}
+.modalImgContainer{
+  flex: 5;
+}
 .text-primary {
-  color: #17a2b8;
+  color: #4b2fcc !important;
 }
 .round-img {
   border-radius: 50%;
@@ -89,10 +114,10 @@
 .line {
   height: 1px;
   background: #ccc;
-  margin: 1.5rem 0;
+  margin: 1rem 0;
 }
 .bg-primary {
-  background-color: #17a2b8;
+  background-color: #4b2fcc;
   color: #fff;
 }
 .bg-light {
@@ -130,12 +155,13 @@
   -webkit-transition: all 0.2s ease-in;
   transition: all 0.2s ease-in;
 }
+
 .btn.btn-primary {
-  background-color: #17a2b8;
+  background-color: #4b2fcc;
   color: #fff;
 }
 .btn.btn-primary:hover {
-  background: #1ab6cf;
+  background: #835DF0;
 }
 .btn.btn-dark {
   background-color: #343a40;
@@ -190,7 +216,7 @@
   }
 }
 .alert.alert-primary {
-  background-color: #17a2b8;
+  background-color: #4b2fcc;
   
 }
 .alert.alert-dark {
@@ -212,7 +238,7 @@
   color: #333;
 }
 .badge.badge-primary {
-  background-color: #17a2b8;
+  background-color: #4b2fcc;
   color: #fff;
 }
 .badge.badge-dark {
@@ -297,16 +323,10 @@
   margin: 0;
   padding: 0;
 }
-body {
-  font-family: "Raleway", sans-serif;
-  font-size: 1rem;
-  line-height: 1.6;
-  background-color: #fff;
-  color: #333;
-}
+
 a {
   text-decoration: none;
-  color: #17a2b8;
+  color: #4b2fcc;
 }
 ul {
   list-style: none;
@@ -314,41 +334,54 @@ ul {
 img {
   width: 100%;
 }
-.navbar {
-  display: -webkit-box;
-  display: -ms-flexbox;
+.navbarContainer {
   display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
   justify-content: space-between;
+  align-items: center;
   padding: 0.7rem 2rem;
   position: fixed;
+  top: 0;
   z-index: 1;
   width: 100%;
-  top: 0;
-  border-bottom: solid 1px #17a2b8;
-  opacity: 0.9;
+  border-bottom: solid 1px #4c2fccad;
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  
 }
-.navbar ul {
-  display: -webkit-box;
-  display: -ms-flexbox;
+.navbarContainer ul {
   display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 0.5em;
 }
-.navbar a {
+.navbarContainer h3 {
+
+  padding: 0 0.5em;
+}
+.navbarContainer a {
   color: #fff;
   padding: 0.45rem;
   margin: 0 0.25rem;
 }
-.navbar a:hover {
-  color: #17a2b8;
+.navbarContainer a:hover {
+  color: white ;
+  background-color: #4b2fcc ;
+  /* padding: 0 0.5em; */
+  border-radius: 5px;
 }
 .landing {
   position: relative;
-  background: url("https://akm-img-a-in.tosshub.com/indiatoday/images/story/202012/chris-ried-ieic5Tq8YMk-unsplas_1200x768.jpeg?size=690:388")
+  background: url("./assets//Search\ _\ Deep\ Dream\ Generator.png")
   center center/cover no-repeat;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* background: url("https://akm-img-a-in.tosshub.com/indiatoday/images/story/202012/chris-ried-ieic5Tq8YMk-unsplas_1200x768.jpeg?size=690:388")
+  center center/cover no-repeat; */
+  height: 100vh;
+  /* margin-top: ; */
+}
+.landingContaienrImg{
+  justify-content: flex-end;
   height: 100vh;
 }
 .profileImg{
@@ -428,13 +461,25 @@ flex: 3;
 }
 
 .profileBanger{
-  
-  background-color: #17a2b8;
+    border-radius: 15px;
+  background-color: #4b2fcc;
   color: white;
 }
 
 .profileInfoContainer ul li a{
 color: #fff;
+}
+.profileContainer{
+  background-color: #845df09d;
+  border-radius: 5px;
+  padding: 0.5em 1em;
+  color: white;
+}
+.dashboardContainer{
+  background-color: #845df09d;
+  border-radius: 5px;
+  padding: 0.5em 1em;
+  color: white;
 }
 .profileBanger{
   display: flex;
@@ -445,7 +490,7 @@ color: #fff;
 .profileInfoContainer ul{
   display: flex;
   gap: 1em;
-  margin: 0 auto;
+  padding-left: 0 !important;
 }
 
 .profileInfoContainer ul li {
@@ -470,12 +515,16 @@ color: #fff;
   gap: 1em;
 }
 .expsContainer{
-  padding: 1em;
+  padding: 1em ;
+  margin: 1em 0;
   background-color: rgb(228, 227, 227);
+  border-radius: 15px;
   flex: 6;
 }
 .eduContainer{
+  margin: 1em 0;
   padding: 1em;
+  border-radius: 15px;
   background-color: rgb(228, 227, 227);
   flex: 6;
 }
@@ -496,7 +545,7 @@ color: #fff;
   text-align: center;
 }
 .repoStar{
-  background-color: #17a2b8;
+  background-color: #4b2fcc;
   color: white;
 }
 .repoWatcher{
@@ -511,15 +560,26 @@ color: #fff;
   gap: 1em;
   margin-top: 1em;    
 }
+.modalHeaderContainer{
+  display: flex;justify-content: center;
+  padding: 1em;
+  border-bottom: 1px solid rgb(201, 201, 201);
+}
+.modalHeaderContainer h1{
+  text-align: center;
+  color: #4b2fcc;
+}
 
 .profileEducationDisplayContainer{
+  color: rgb(32, 32, 32);
   word-wrap: break-word;
+  border-radius: 5px;
 }
   
 
 .btnMain{
   padding: 8px;
-  background-color: #17a2b8;
+  background-color: #4b2fcc;
   color: white;
   text-align: center;
   border: none;
@@ -633,6 +693,8 @@ padding: 1.2em;
 @media (width >= 1200px){
   .experienceContainer{
     width: 35vw;
+    background-color: rgb(204, 202, 202);
+
   }
 }
 
@@ -641,6 +703,9 @@ padding: 1.2em;
     word-wrap: break-word;
     font-size: 0.8em;
   
+  }
+  .modalImgContainer{
+    display: none;
   }
     
   .hide-sm {
@@ -673,20 +738,7 @@ padding: 1.2em;
   .lead {
     font-size: 1rem;
   }
-  .navbar {
-    display: block;
-    text-align: center;
-  }
-  .navbar ul {
-    text-align: center;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-  }
-  .navbar h1 {
-    margin-bottom: 1rem;
-  }
-  .dash-buttons a {
+   .dash-buttons a {
     display: block;
     width: 100%;
     margin-bottom: 0.2rem;

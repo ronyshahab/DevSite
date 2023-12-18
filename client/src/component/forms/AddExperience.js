@@ -7,31 +7,24 @@ import { Alert } from "../smallerComponent/Toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { experienceSchema } from "../../validation/Validation";
+import { Form } from "react-bootstrap";
 const AddExperience = () => {
-  // hooks instance created
   const navigate = useNavigate();
   const param = useParams();
   const updatable = param.updatable === "true";
 
-  // data called from redux
   const educationFormData = useSelector((s) => s.setEducationFormDataReducer);
-  console.log(educationFormData)
-  // creating education id
   const educationId = updatable
     ? educationFormData.current[educationFormData.current.length - 1]
     : undefined;
 
-  // function created to call axios
   const addExperience = async (method, url, data) => {
     const result = await getData(method, url, data);
     navigate("/dashboard");
     return result;
   };
 
-  // formik instance created
   const formik = useFormik({
-    // values set in formik
-
     initialValues: {
       title: updatable ? educationFormData.current[0] : "",
       company: updatable ? educationFormData.current[1] : "",
@@ -42,15 +35,9 @@ const AddExperience = () => {
       description: updatable ? educationFormData.current[6] : "",
     },
 
-    // on submit function for form
     validationSchema: experienceSchema,
     onSubmit: async (initialValues) => {
-      // condition to check availablity of education Id
-
       if (educationId !== undefined && educationId !== null) {
-        // console.log("This will update", educationId);
-
-        // updating data in api
         const res = await addExperience(
           "put",
           `/profile/experience/${educationId}`,
@@ -58,9 +45,6 @@ const AddExperience = () => {
         );
         res && Alert("success", "Experience Edited Successfully", 2000);
       } else {
-        // console.log("This will add", educationId);
-
-        // adding data in api
         const res = await addExperience(
           "put",
           `/profile/experience`,
@@ -75,10 +59,10 @@ const AddExperience = () => {
     <div>
       <section className="container">
         <h1 className="large text-primary">Add An Experience</h1>
-        <form className="form" onSubmit={formik.handleSubmit}>
-          <div className="form-group">
-            <Input
-              title="Position:"
+        <Form onSubmit={formik.handleSubmit}>
+          <Form.Group>
+            <Form.Label>Position</Form.Label>
+            <Form.Control
               type="text"
               placeholder="Job Title"
               name="title"
@@ -87,10 +71,15 @@ const AddExperience = () => {
               value={formik.values.title}
               error={formik.touched.title && formik.errors.title}
             />
-          </div>
-          <div className="form-group">
-            <Input
-              title="Company:"
+            {formik.touched.title && formik.errors.title && (
+              <Form.Control.Feedback type="invalid">
+                <small style={{ color: "red" }}>*{formik.errors.title}</small>
+              </Form.Control.Feedback>
+            )}
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Company</Form.Label>
+            <Form.Control
               placeholder="Company"
               name="company"
               onChange={formik.handleChange}
@@ -98,10 +87,15 @@ const AddExperience = () => {
               value={formik.values.company}
               error={formik.touched.company && formik.errors.company}
             />
-          </div>
-          <div className="form-group">
-            <Input
-              title="Location:"
+            {formik.touched.company && formik.errors.company && (
+              <Form.Control.Feedback type="invalid">
+                <small style={{ color: "red" }}>*{formik.errors.company}</small>
+              </Form.Control.Feedback>
+            )}
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Location</Form.Label>
+            <Form.Control
               placeholder="Location"
               name="location"
               onChange={formik.handleChange}
@@ -109,10 +103,17 @@ const AddExperience = () => {
               value={formik.values.location}
               error={formik.touched.location && formik.errors.location}
             />
-          </div>
-          <div className="form-group">
+            {formik.touched.location && formik.errors.location && (
+              <Form.Control.Feedback type="invalid">
+                <small style={{ color: "red" }}>
+                  *{formik.errors.location}
+                </small>
+              </Form.Control.Feedback>
+            )}
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Form</Form.Label>
             <Input
-              title="Form:"
               type="date"
               name="from"
               onChange={formik.handleChange}
@@ -120,10 +121,10 @@ const AddExperience = () => {
               value={formik.values.from}
               error={formik.touched.from && formik.errors.from}
             />
-          </div>
-          <div className="form-group">
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>To</Form.Label>
             <Input
-              title="To:"
               type="date"
               name="to"
               onChange={formik.handleChange}
@@ -131,8 +132,8 @@ const AddExperience = () => {
               value={formik.values.to}
               error={formik.touched.to && formik.errors.to}
             />
-          </div>
-          <div className="form-group">
+          </Form.Group>
+          <Form.Group className="mt-3">
             <Input
               inputType="checkbox"
               title="Current Working?"
@@ -142,24 +143,31 @@ const AddExperience = () => {
               value={formik.values.current}
               error={formik.touched.current && formik.errors.current}
             />
-          </div>
-          <div className="form-group">
-            <Input
-              title="Description:"
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Description</Form.Label>
+            <Form.Control
               name="description"
-              inputType="textarea"
+              as="textarea"
               placeholder="Job Description"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.description}
               error={formik.touched.description && formik.errors.description}
             />
-          </div>
+            {formik.touched.location && formik.errors.location && (
+              <Form.Control.Feedback type="invalid">
+                <small style={{ color: "red" }}>
+                  *{formik.errors.location}
+                </small>
+              </Form.Control.Feedback>
+            )}
+          </Form.Group>
           <input type="submit" className="btn btn-primary my-1" />
           <Link className="btn my-1" to={"/dashboard"}>
             Go Back
           </Link>
-        </form>
+        </Form>
       </section>
     </div>
   );
