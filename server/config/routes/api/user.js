@@ -6,6 +6,9 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 const { check, validationResult } = require("express-validator");
 const User = require("../../../models/User.js");
+const cloudinary = require("../../../utils/cloudinary.js");
+const { uploadAImageOnCloudinary } = require("../../../utils/cloudinary.js");
+const { upload } = require("../../../utils/multer.js");
 
 router.get("/", async (req, res) => {
   try {
@@ -29,6 +32,7 @@ router.get("/:email", async (req, res) => {
 });
 router.post(
   "/",
+  upload.single("profileImage"),
   [
     check("name", "Name is required").notEmpty(),
     check("email", "Please enter a valid email").isEmail(),
@@ -48,18 +52,28 @@ router.post(
       if (user) {
         return res.status(400).json({ error: "user already exist" });
       }
-      const avatar = gravatar.url(email, {
-        s: 200,
-        r: "pg",
-        d: "mm",
-      });
 
-      user = new User({
-        name,
-        email,
-        password,
-        avatar,
-      });
+      if (req.file) {
+        const upload = await uploadAImageOnCloudinary(req.file.path);
+        user = new User({
+          name,
+          email,
+          password,
+          avatar: upload,
+        });
+      } else {
+        const avatar = gravatar.url(email, {
+          s: 200,
+          r: "pg",
+          d: "mm",
+        });
+        user = new User({
+          name,
+          email,
+          password,
+          avatar: avatar,
+        });
+      }
 
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(password, salt);

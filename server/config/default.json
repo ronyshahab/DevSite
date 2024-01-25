@@ -1,6 +1,8 @@
 {
     "mongoUrl":"mongodb+srv://ronak:1234@cluster0.hpjrdsj.mongodb.net/?retryWrites=true&w=majority",
     "jwtSecret":"jwtScretKey",
-    "githubToken":"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"
-    
+    "githubToken":"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",
+    "CLOUDNAME":"dcscprdod",
+"APIKEY":"799484868918937",
+"APISECRET":"gdRuy8hzNBHhrcStWcerFjR_ZPw"
 }

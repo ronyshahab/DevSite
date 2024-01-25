@@ -1,35 +1,34 @@
 import React, { useEffect, useState } from "react";
-import Input from "../smallerComponent/Input";
+import Input from "../../smallerComponent/Input";
 import { useFormik } from "formik";
-import getData from "../../commonFunction/getDataFromAxios";
+import getData from "../../../commonFunction/getDataFromAxios";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { setCurretnUserProfileDataAction } from "../../redux/actions/actions";
+import { useDispatch } from "react-redux";
 import { Form } from "react-bootstrap";
-import SelectComponent from "../smallerComponent/SelectComponent";
-import axios from "axios";
-import { createProileSchema } from "../../validation/Validation";
-
+import SelectComponent from "../../smallerComponent/SelectComponent";
+import { createProileSchema } from "../../../validation/Validation";
+import "./createProfile.css";
 const CreateProfile = () => {
-  // useHooksInstance
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [profileData, setProfileData] = useState([]);
 
-  // Function to edit profile Data
   const editProfile = async (method, url, data) => {
     const result = await getData(method, url, data);
     navigate("/dashboard");
     return result;
   };
 
-  // useEffect to call dispatch
-  // useEffect(()=>{
-  //   dispatch(setCurretnUserProfileDataAction())
-  // },[])
+  const handleSubmit = async () => {
+    const formValues = formik.values;
+    const payload = {
+      ...formValues,
+      skills: formValues.skills.filter((m) => m !== ""),
+      status: formValues.status.value,
+    };
+    await editProfile("post", "/profile", payload);
+  };
 
-  // gettitng data from redux
-  // formik instance created
   const formik = useFormik({
     initialValues: {
       company: profileData.company ? profileData.company : "",
@@ -50,15 +49,6 @@ const CreateProfile = () => {
     },
 
     validationSchema: createProileSchema,
-    onSubmit: async (initialValues) => {
-      const payload = {
-        ...initialValues,
-        skills: initialValues.skills.filter((m) => m !== ""),
-        status: initialValues.status.value,
-      };
-      console.log(payload);
-      await editProfile("post", "/profile", payload);
-    },
   });
 
   useEffect(() => {
@@ -94,17 +84,23 @@ const CreateProfile = () => {
       linkedin: profileData?.social?.linkedin ?? "",
       instagram: profileData?.social?.instagram ?? "",
     });
-    console.log(formik.values);
   }, [profileData]);
 
   const addInput = (e) => {
     e.preventDefault();
-    console.log(formik.values.skills[formik.values.skills.length - 1]);
     if (formik.values.skills[formik.values.skills.length - 1]) {
       const newSkills = [...formik.values.skills, ""];
       formik.setFieldValue("skills", newSkills);
     }
   };
+
+  const removeSkill = (e) => {
+    const array = [...formik.values.skills];
+    array.splice(e, 1);
+    formik.setFieldValue("skills", array);
+  };
+
+  useEffect(() => {}, [formik.values.skills]);
 
   return (
     <div>
@@ -201,17 +197,33 @@ const CreateProfile = () => {
                 {formik.values.skills.map((item, index) => {
                   return (
                     <div key={index}>
-                      <Form.Control
-                        type="text"
-                        placeholder="Skills"
-                        name={`skills[${index}]`}
-                        value={formik.values.skills[index]}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        isInvalid={
-                          formik?.errors?.skills && formik.touched.skills
-                        }
-                      />
+                      <div
+                        className={`${
+                          formik.values.skills.length > 1
+                            ? "showCrossInput"
+                            : ""
+                        }`}
+                      >
+                        {" "}
+                        <Form.Control
+                          type="text"
+                          placeholder="Skills"
+                          name={`skills[${index}]`}
+                          value={formik.values.skills[index]}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          isInvalid={
+                            formik?.errors?.skills && formik.touched.skills
+                          }
+                        />
+                        {formik.values.skills.length > 1 && (
+                          <i
+                            className="fa-solid fa-xmark"
+                            onClick={() => removeSkill(index)}
+                          ></i>
+                        )}
+                      </div>
+
                       {formik.touched.skills && formik.errors.skills && (
                         <Form.Control.Feedback type="invalid">
                           <small style={{ color: "red" }}>
@@ -316,8 +328,14 @@ const CreateProfile = () => {
                   onBlur={formik.handleBlur}
                 />
               </div>
-              <input type="submit" className="btn btn-primary my-1" />
-              <a className="btn btn-light my-1" href="dashboard">
+              <button
+                type="submit"
+                onClick={handleSubmit}
+                className="btn btn-primary my-1"
+              >
+                Submit
+              </button>
+              <a className="btn btn-light my-1" onClick={navigate(-1)}>
                 Go Back
               </a>
             </Form>{" "}

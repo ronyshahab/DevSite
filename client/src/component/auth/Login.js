@@ -1,7 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
+import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Modal, Form, Button, FormGroup } from "react-bootstrap";
@@ -18,24 +15,27 @@ function Login({ show, handleClose, openRegister }) {
 
   const getUser = async () => {
     const token = localStorage.getItem("token");
+    console.log(token);
     if (!token) {
-      Alert("error", "No token found", "light");
+      Alert("error", "No token found ", "light");
       return;
     }
-    try {
-      const user = await axios.get(`http://localhost:5000/api/profile/me`, {
-        headers: {
-          token,
-        },
-      });
-      console.log(user.response.status);
-      if (user.response.status !== 200) {
-        console.log("something went bad");
-        navigate("/dashboard");
+    if (token) {
+      try {
+        const user = await axios.get(`http://localhost:5000/api/profile/me`, {
+          headers: {
+            token,
+          },
+        });
+        console.log(user.response.status);
+        if (user.response.status !== 200) {
+          console.log("something went bad");
+          navigate("/dashboard");
+        }
+        return user;
+      } catch (error) {
+        console.log(error);
       }
-      return user;
-    } catch (error) {
-      console.log(error);
     }
     // const user = allUser.data[0];
   };

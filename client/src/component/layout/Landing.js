@@ -10,11 +10,11 @@ const Landing = () => {
   const navigate = useNavigate();
   const user = localStorage.getItem("user");
   // console.log(user)
-  // useEffect(() => {
-  //   if (user !== undefined && user !== null) {
-  //     navigate("/profile");
-  //   }
-  // });
+  useEffect(() => {
+    if (user !== undefined && user !== null) {
+      navigate("/posts");
+    }
+  });
 
   const openRegister = () => {
     setLogin(false);

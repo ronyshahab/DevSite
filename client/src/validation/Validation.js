@@ -72,8 +72,29 @@ export const loginSchema = YUP.object({
 
 export const createProileSchema = YUP.object({
   company: YUP.string().required().max("50"),
-  skills: YUP.string().required(),
+  skills: YUP.array().of(YUP.string()).required(),
   status: YUP.string().required(),
   bio: YUP.string().required(),
   location: YUP.string().required().max("150"),
+});
+
+export const registerSchema = YUP.object({
+  name: YUP.string().required().min(3),
+  email: YUP.string()
+    .required("This field is required")
+    .test((value) => {
+      if (value.includes("@")) {
+        return true;
+      }
+    }),
+  password: YUP.string()
+    .required("This field is required")
+    .matches(/[!@#$%^&*(),.?":{}|<>]/, "Password too weak")
+    .test((value) => {
+      if (value.length > 8) {
+        return true;
+      } else {
+        return false;
+      }
+    }),
 });

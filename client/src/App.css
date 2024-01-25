@@ -370,13 +370,13 @@ img {
 }
 .landing {
   position: relative;
-  background: url("./assets//Search\ _\ Deep\ Dream\ Generator.png")
-  center center/cover no-repeat;
+  /* background: url("./assets//Search\ _\ Deep\ Dream\ Generator.png")
+  center center/cover no-repeat; */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* background: url("https://akm-img-a-in.tosshub.com/indiatoday/images/story/202012/chris-ried-ieic5Tq8YMk-unsplas_1200x768.jpeg?size=690:388")
-  center center/cover no-repeat; */
+  background: url("https://akm-img-a-in.tosshub.com/indiatoday/images/story/202012/chris-ried-ieic5Tq8YMk-unsplas_1200x768.jpeg?size=690:388")
+  center center/cover no-repeat;
   height: 100vh;
   /* margin-top: ; */
 }
