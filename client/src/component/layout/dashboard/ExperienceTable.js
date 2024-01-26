@@ -4,7 +4,7 @@ import {
   capitalize,
   dateFormate,
 } from "../../../commonFunction/commonFunction";
-import { setEducationFormData } from "../../../redux/actions/actions";
+// import { setEducationFormData } from "../../../redux/actions/actions";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import getData from "../../../commonFunction/getDataFromAxios";
@@ -19,7 +19,7 @@ const ExperienceTable = ({ data }) => {
   const handleUpdateIcon = async (data) => {
     const updatable = true;
 
-    dispatch(setEducationFormData(data));
+    // dispatch(setEducationFormData(data));
 
     navigate(`/add-experience/${updatable}`);
   };

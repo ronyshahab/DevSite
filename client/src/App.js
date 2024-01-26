@@ -5,7 +5,7 @@ import { Suspense, lazy } from "react";
 import Landing from "./component/layout/Landing";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Provider } from "react-redux";
-import store from "./redux/store";
+import { store } from "./redux/store";
 import Loader from "./component/smallerComponent/Loader";
 import Navbar from "./component/smallerComponent/navbar/Navbar";
 import { ToastContainer } from "./component/smallerComponent/Toast";

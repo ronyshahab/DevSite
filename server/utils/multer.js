@@ -13,7 +13,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 const uploadImageToServer = (req, res, next) => {
-  // console.log(req);
   const imageUpload = upload.single("profileImage");
   console.log(imageUpload);
   if (imageUpload) {

@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import Login from "../auth/Login";
 import Register from "../auth/Register";
-import LandingImage from "../../assets/connected-world-concept-illustration_114360-4240.avif";
 const Landing = () => {
   const [showLogin, setLogin] = useState(false);
   const [showRegister, setRegister] = useState(false);

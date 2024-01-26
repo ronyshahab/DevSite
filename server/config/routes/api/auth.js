@@ -35,7 +35,7 @@ router.post(
 
       if (!user) {
         return res
-          .status(400)
+          .status(200)
           .json({ errors: [{ msg: "Invalid Credentials" }] });
       }
 
@@ -43,7 +43,7 @@ router.post(
 
       if (!isMatch) {
         return res
-          .status(400)
+          .status(200)
           .json({ errors: [{ msg: "Invalid Credentials" }] });
       }
 
@@ -56,7 +56,7 @@ router.post(
       jwt.sign(payload, config.get("jwtSecret"), (err, token) => {
         if (err) throw err;
 
-        res.json({ token });
+        res.json({ token, email });
       });
     } catch (err) {
       console.error(err.message);

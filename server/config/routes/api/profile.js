@@ -5,6 +5,8 @@ const auth = require("../../../middleware/auth.js");
 const Profile = require("../../../models/Profile.js");
 const User = require("../../../models/User.js");
 const { check, validationResult } = require("express-validator");
+const { upload } = require("../../../utils/multer.js");
+const { uploadAImageOnCloudinary } = require("../../../utils/cloudinary.js");
 
 router.get("/me", auth, async (req, res) => {
   try {
@@ -20,6 +22,29 @@ router.get("/me", auth, async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).send(err.message);
+  }
+});
+router.post("/me", upload.single("profileImg"), auth, async (req, res) => {
+  try {
+    const upload = await uploadAImageOnCloudinary(req.file.path);
+
+    if (upload) {
+      const imgUrl = upload;
+      let profile = await User.findOneAndUpdate(
+        { user: req.user.id },
+        { $set: { avatar: imgUrl } },
+        { new: true }
+      );
+
+      if (profile) {
+        res.status(200).json({ profile });
+      }
+    } else {
+      res.status(400).json({ error: "Something went wrong" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

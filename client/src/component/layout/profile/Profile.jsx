@@ -1,29 +1,79 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { capitalize } from "../../../commonFunction/commonFunction";
-import { setCurretnUserProfileDataAction } from "../../../redux/actions/actions";
 import { useDispatch, useSelector } from "react-redux";
 import Education from "./Education";
 import Experience from "./Experience";
 import List from "../../smallerComponent/List";
 import Loader from "../../smallerComponent/Loader";
+import getData from "../../../commonFunction/getDataFromAxios"
+import { resetCurrentUser, setCurrentUser } from "../../../redux/slices/CurrentUser.slice";
+import axios from "axios";
 
 const Profile = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [profileImgData, setProfileImgData] = useState()
+  const fileInputRef = useRef()
+  const profileData = useSelector((s) => s.currentUser);
   let element;
 
-  const profileData = useSelector((s) => s.setCurrentUserProfileDataReducer);
+  const fetchData = async () => {
+    try {
+      const data = await getData("get", "/profile/me");
+      dispatch(setCurrentUser(data.data))
+    } catch (error) {
+      console.error(error);
+    }
+  };  
   useEffect(() => {
-    dispatch(setCurretnUserProfileDataAction());
-  }, []);
+    if(Object.keys(profileData).length === 0){
+
+      fetchData();
+    }
+
+  }, [profileData]);
 
   useEffect(() => {
     if (profileData.msg == "there is no profile of this user") {
       navigate("/create-profile");
     }
+    
+    profileData.user && setProfileImgData(profileData.user.avatar)
   }, [profileData]);
 
+  const handleImageClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const config = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+        "token": localStorage.getItem("token")
+    },
+  };
+
+  const changeProfileImg =async() =>{
+    const formData = new FormData()
+  
+    formData.append("profileImg", profileImgData)
+    try {
+      const data =  await axios.post(`http://localhost:5000/api/profile/me`, formData, config);
+      console.log(data)
+      if(data.status === 200){
+        dispatch(resetCurrentUser())
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(()=>{
+
+    if(typeof profileImgData === "object"){
+       changeProfileImg()
+    }
+ },[profileImgData])
   if (Object.keys(profileData).length !== 0) {
     if (profileData.skills) {
       const skillsArray = profileData.skills;
@@ -68,11 +118,24 @@ const Profile = () => {
           <div className="profileContainer">
             <div className="profileBanger">
               <div className="profileImgContainer" style={{ marginTop: "1em" }}>
-                <img
-                  src={`${profileData.user.avatar}`}
-                  className="round-img"
-                  alt=""
-                />
+              <input
+          type="file"
+          id="fileInput"
+          accept="image/*"
+          ref={fileInputRef}
+          style={{ display: "none" }}
+          onChange={(e) => setProfileImgData(e.target.files[0])}
+        />
+        <img
+          src={profileData.user.avatar}
+          className="round-img"
+          alt=""
+          onClick={handleImageClick}
+          style={{ cursor: "pointer" }}
+        />
+        {/* {newImage && (
+          <img src={URL.createObjectURL(newImage)} className="round-img" alt="" />
+        )} */}
               </div>
               <div
                 className="profileInfoContainer"
@@ -204,6 +267,5 @@ const Profile = () => {
       )}
     </>
   );
-};
-
+  }
 export default Profile;

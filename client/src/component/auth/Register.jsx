@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import { Alert } from "../smallerComponent/Toast";
 import { registerSchema } from "../../validation/Validation";
 import RegisterImage from "../../assets/photo-editing-software-illustration-design-concept-illustration-websites-landing-pages-mobile-applications-posters-banners_108061-917.avif";
+import { setCurrentUser } from "../../redux/slices/CurrentUser.slice";
 const bcrypt = require("bcryptjs");
 
 const Register = ({ show, handleClose, openLogin }) => {
@@ -21,8 +22,10 @@ const Register = ({ show, handleClose, openLogin }) => {
   const postUser = async (values) => {
     try {
       const res = await axios.post(`http://localhost:5000/api/user`, values, config);
+      setCurrentUser(res.data.email)
       if (res) {
         localStorage.setItem("token", res.data.token);
+        localStorage.setItem("email", formik.values.email);
         Alert("success", "User registered Successfully");
         navigate("/posts");
       } else {
@@ -157,6 +160,7 @@ const Register = ({ show, handleClose, openLogin }) => {
                   type="file"
                   placeholder="Select a profile img"
                   name="avatar"
+                  accept="image/*"
                   onChange={(e) => setUploadImage(e.target.files[0])}
 
                   // onBlur={formik.handleBlur}

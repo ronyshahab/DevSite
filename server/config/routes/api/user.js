@@ -88,7 +88,7 @@ router.post(
 
       jwt.sign(payload, config.get("jwtSecret"), (err, token) => {
         if (err) throw err;
-        res.json({ token });
+        res.json({ token, email });
       });
     } catch (err) {
       console.log(err.message);
