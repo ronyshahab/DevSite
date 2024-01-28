@@ -11,6 +11,7 @@ import getData from "../../../commonFunction/getDataFromAxios";
 
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
+import { setSelectedExperience } from "../../../redux/slices/SelectedExperience.slice";
 const ExperienceTable = ({ data }) => {
   const tableInheritorRef = useRef();
   const dispatch = useDispatch();
@@ -18,8 +19,7 @@ const ExperienceTable = ({ data }) => {
   const [tableBodyValue, setTableBodyValue] = useState([]);
   const handleUpdateIcon = async (data) => {
     const updatable = true;
-
-    // dispatch(setEducationFormData(data));
+    dispatch(setSelectedExperience(data));
 
     navigate(`/add-experience/${updatable}`);
   };

@@ -11,6 +11,7 @@ import Navbar from "./component/smallerComponent/navbar/Navbar";
 import { ToastContainer } from "./component/smallerComponent/Toast";
 import "react-toastify/dist/ReactToastify.css";
 import AuthGuard from "./component/smallerComponent/AuthGuard";
+import LoggedInUser from "./component/smallerComponent/LoggedInUser";
 const Profiles = lazy(() => import("./component/layout/profile/Profiles"));
 const Profile = lazy(() => import("./component/layout/profile/Profile"));
 const CreateProfile = lazy(() =>
@@ -41,7 +42,9 @@ const App = () => {
               path="profiles"
               element={
                 <AuthGuard>
-                  <Profiles />
+                  <LoggedInUser>
+                    <Profiles />
+                  </LoggedInUser>
                 </AuthGuard>
               }
             ></Route>
@@ -49,8 +52,9 @@ const App = () => {
               path="dashboard"
               element={
                 <AuthGuard>
-                  {" "}
-                  <Dashboard />{" "}
+                  <LoggedInUser>
+                    <Dashboard />
+                  </LoggedInUser>
                 </AuthGuard>
               }
             ></Route>
@@ -58,8 +62,9 @@ const App = () => {
               path="profile"
               element={
                 <AuthGuard>
-                  {" "}
-                  <Profile />{" "}
+                  <LoggedInUser>
+                    <Profile />
+                  </LoggedInUser>{" "}
                 </AuthGuard>
               }
             ></Route>
@@ -94,8 +99,9 @@ const App = () => {
               path="posts"
               element={
                 <AuthGuard>
-                  {" "}
-                  <Posts />{" "}
+                  <LoggedInUser>
+                    <Posts />
+                  </LoggedInUser>{" "}
                 </AuthGuard>
               }
             ></Route>
@@ -103,8 +109,9 @@ const App = () => {
               path="post"
               element={
                 <AuthGuard>
-                  {" "}
-                  <Post />{" "}
+                  <LoggedInUser>
+                    <Post />
+                  </LoggedInUser>
                 </AuthGuard>
               }
             ></Route>

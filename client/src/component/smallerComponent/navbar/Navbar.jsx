@@ -3,9 +3,15 @@ import "./navbar.css";
 import DropDown from "../DropDown/DropDown";
 import { alertUser } from "../../../commonFunction/commonFunction";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { resetCurrentUser } from "../../../redux/slices/CurrentUser.slice";
+import GearIcon from "../../../assets/icons/white-gear-solid.svg"
+import CodeIcon from "../../../assets/icons/code-solid.svg"
+import LogoutIcon from "../../../assets/icons/right-from-bracket-solid.svg"
 const Navbar = () => {
   const [user, setUser] = useState();
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   useEffect(() => {
     setUser(localStorage.getItem("user"));
   }, []);
@@ -15,6 +21,7 @@ const Navbar = () => {
   const handleLogoutClick = async () => {
     if (await alertUser("logoutUser")) {
       localStorage.clear();
+      dispatch(resetCurrentUser())
     }
     navigate("/");
   };
@@ -31,13 +38,13 @@ const Navbar = () => {
     <div className="navbarContainer ">
       <div>
         <h2 style={{ textDecoration: "none", color: "white" }}>
-          <i className="fas fa-code settingButton "></i> DevSite{" "}
+          <img src={CodeIcon}  className="icon-large  settingButton "></img> DevSite{" "}
         </h2>
       </div>
       <div>
         <ul>
           <DropDown
-            mainButton={<i className="fa-solid fa-gear"></i>}
+            mainButton={<img  src={GearIcon} className="icon " ></img>}
             mainButtonRef={settingButtonRef}
             buttons={button}
           />

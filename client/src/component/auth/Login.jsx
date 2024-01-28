@@ -26,7 +26,6 @@ function Login({ show, handleClose, openRegister }) {
         return
       }
       Alert("success", "Login Successfull")
-      dispatch(setCurrentUser(data.data.email))
       TOKEN = data.data.token;
       localStorage.setItem("token", TOKEN);
       localStorage.setItem("email", formik.values.email);

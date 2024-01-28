@@ -18,21 +18,6 @@ const Profile = () => {
   const profileData = useSelector((s) => s.currentUser);
   let element;
 
-  const fetchData = async () => {
-    try {
-      const data = await getData("get", "/profile/me");
-      dispatch(setCurrentUser(data.data))
-    } catch (error) {
-      console.error(error);
-    }
-  };  
-  useEffect(() => {
-    if(Object.keys(profileData).length === 0){
-
-      fetchData();
-    }
-
-  }, [profileData]);
 
   useEffect(() => {
     if (profileData.msg == "there is no profile of this user") {

@@ -1,46 +1,89 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { dateFormate } from "../../commonFunction/commonFunction";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import getData from "../../commonFunction/getDataFromAxios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Alert } from "../smallerComponent/Toast";
 import Input from "../smallerComponent/Input";
 import { educationSchema } from "../../validation/Validation";
 import { Form } from "react-bootstrap";
 import DatePickerComponent from "../smallerComponent/DateComponent";
+import {
+  resetSelectedEducation,
+  setSelectedEducation,
+} from "../../redux/slices/SelectedEducation.slice";
+import { resetCurrentUser } from "../../redux/slices/CurrentUser.slice";
 
 const AddEducation = () => {
   const navigate = useNavigate();
   const param = useParams();
   const updatable = param.updatable === "true";
+  const dispatch = useDispatch();
+  const [educationId, setEducationId] = useState();
 
-  const educationFormData = useSelector((s) => s.setEducationFormDataReducer);
-  // console.log(educationFormData)
+  const educationFormData = useSelector((s) => s.selectedEducation);
 
-  const educationId = updatable
-    ? educationFormData.current[educationFormData.current.length - 1]
-    : undefined;
+  // setEducationId(updatable
+  //   ? educationFormData[educationFormData.length - 1]
+  //   : undefined)
 
-  // Add education Api call
   const addEducation = async (method, url, data) => {
     const result = await getData(method, url, data);
     navigate("/dashboard");
     return result;
   };
 
-  // formik created
+  useEffect(() => {
+    const educationId = updatable
+      ? educationFormData[educationFormData.length - 1]
+      : undefined;
+
+    setEducationId(educationId);
+    if (educationId) {
+      formik.setValues({
+        school: educationFormData[0],
+        degree: educationFormData[1],
+        fieldofstudy: educationFormData[2],
+        from: dateFormate(educationFormData[3]),
+        to: dateFormate(educationFormData[4]),
+        description: educationFormData[5],
+      });
+    }
+    return () => {
+      if (educationFormData.length > 0) {
+        localStorage.setItem("lastSelectedEducation", educationFormData);
+      }
+    };
+  
+  }, [educationFormData]);
+
+  useEffect(() => {
+    if (educationFormData[0] === undefined) {
+      const lastSelectedEducation = localStorage.getItem(
+        "lastSelectedEducation"
+      );
+
+      if (lastSelectedEducation) {
+        const lastSelectedArray = lastSelectedEducation.split(",");
+        lastSelectedArray[5] = lastSelectedArray[5] == "true" ? true : false;
+        dispatch(setSelectedEducation(lastSelectedArray));
+      }
+    }
+  }, []);
+
   const formik = useFormik({
     initialValues: {
-      school: updatable ? educationFormData.current[0] : "",
-      degree: updatable ? educationFormData.current[1] : "",
-      fieldofstudy: updatable ? educationFormData.current[2] : "",
-      from: updatable ? dateFormate(educationFormData.current[3]) : "",
-      to: updatable ? dateFormate(educationFormData.current[4]) : "",
-      description: updatable ? educationFormData.current[5] : "",
+      school: "",
+      degree: "",
+      fieldofstudy: "",
+      from: "",
+      to: "",
+      description: "",
     },
     validationSchema: educationSchema,
     onSubmit: async (initialValues) => {
+      console.log(updatable);
       if (educationId !== undefined && educationId !== null) {
         const res = await addEducation(
           "put",
@@ -48,6 +91,9 @@ const AddEducation = () => {
           initialValues
         );
         res && Alert("success", "Education edited successfully", 2000);
+        if (res.status == 200) {
+          dispatch(resetCurrentUser());
+        }
       } else {
         const res = await addEducation(
           "put",
@@ -55,6 +101,9 @@ const AddEducation = () => {
           initialValues
         );
         res && Alert("success", "Education added successfully", 2000);
+        if (res.status == 200) {
+          dispatch(resetCurrentUser());
+        }
       }
     },
   });
@@ -62,7 +111,9 @@ const AddEducation = () => {
   return (
     <div>
       <section className="container">
-        <h1 className="large text-primary">Add Your Education</h1>
+        <h1 className="large text-primary">
+          {updatable ? "Edit" : "Add"} Your Education
+        </h1>
         <p className="lead">
           <i className="fas fa-graduation-cap"></i> Add any school, bootcamp,
           etc that you have attended
@@ -78,7 +129,6 @@ const AddEducation = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               isInvalid={formik?.errors?.school && formik.touched.school}
-              error={formik.touched.school && formik.errors.school}
             />
             {formik.touched.school && formik.errors.school && (
               <Form.Control.Feedback type="invalid">
@@ -96,7 +146,6 @@ const AddEducation = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               isInvalid={formik?.errors?.degree && formik.touched.degree}
-              error={formik.touched.degree && formik.errors.degree}
             />
             {formik.touched.degree && formik.errors.degree && (
               <Form.Control.Feedback type="invalid">
@@ -116,7 +165,6 @@ const AddEducation = () => {
               isInvalid={
                 formik?.errors?.fieldofstudy && formik.touched.fieldofstudy
               }
-              error={formik.touched.fieldofstudy && formik.errors.fieldofstudy}
             />
             {formik.touched.fieldofstudy && formik.errors.fieldofstudy && (
               <Form.Control.Feedback type="invalid">
@@ -135,7 +183,6 @@ const AddEducation = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               isInvalid={formik?.errors?.from && formik.touched.from}
-              error={formik.touched.from && formik.errors.from}
             />
           </Form.Group>
           <Form.Group>
@@ -147,7 +194,6 @@ const AddEducation = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               isInvalid={formik?.errors?.to && formik.touched.to}
-              error={formik.touched.to && formik.errors.to}
             />
           </Form.Group>
 
@@ -163,7 +209,6 @@ const AddEducation = () => {
               isInvalid={
                 formik?.errors?.description && formik.touched.description
               }
-              error={formik.touched.description && formik.errors.description}
             />
             {formik.touched.description && formik.errors.description && (
               <Form.Control.Feedback type="invalid">

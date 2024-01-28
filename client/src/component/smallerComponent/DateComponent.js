@@ -1,7 +1,7 @@
 import React from "react";
 import DatePicker from "react-datepicker";
-import LeftArrow from "../../assets/u_arrow-left.svg";
-import RightArrow from "../../assets/u_arrow-right.svg";
+import LeftArrow from "../../assets/icons/u_arrow-left.svg";
+import RightArrow from "../../assets/icons/u_arrow-right.svg";
 import { getMonth, getYear } from "date-fns";
 import { months, years } from "../helper/jsonData";
 

@@ -1,22 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { dateFormate } from "../../commonFunction/commonFunction";
 import Input from "../smallerComponent/Input";
 import getData from "../../commonFunction/getDataFromAxios";
 import { Alert } from "../smallerComponent/Toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { experienceSchema } from "../../validation/Validation";
 import { Form } from "react-bootstrap";
+import { resetSelectedExprience, setSelectedExperience } from "../../redux/slices/SelectedExperience.slice";
+import { resetCurrentUser } from "../../redux/slices/CurrentUser.slice";
 const AddExperience = () => {
   const navigate = useNavigate();
   const param = useParams();
+  const dispatch = useDispatch()
   const updatable = param.updatable === "true";
+  const [experienceId, setExperienceId] = useState()
 
-  const educationFormData = useSelector((s) => s.setEducationFormDataReducer);
-  const educationId = updatable
-    ? educationFormData.current[educationFormData.current.length - 1]
-    : undefined;
+  const experienceFormData = useSelector((s) => s.selectedExperience);
+
 
   const addExperience = async (method, url, data) => {
     const result = await getData(method, url, data);
@@ -24,26 +26,70 @@ const AddExperience = () => {
     return result;
   };
 
+
+  useEffect(()=>{
+    const experienceId = updatable
+    ? experienceFormData[experienceFormData.length - 1]
+    : undefined;
+
+    setExperienceId(experienceId)
+    if(experienceId){
+    
+      formik.setValues({
+        title:  experienceFormData[0],
+      company: experienceFormData[1] ,
+      location: experienceFormData[2],
+      from: dateFormate(experienceFormData[3]),
+      to: dateFormate(experienceFormData[4]) ,
+      current:  experienceFormData[5],
+      description: experienceFormData[6] 
+      })
+    }
+    return () =>{
+      if(experienceFormData.length > 0){
+
+        localStorage.setItem("lastSelectedExperience", experienceFormData)
+      }
+    }
+
+    
+  },[experienceFormData])
+
+  useEffect(()=>{
+    if(experienceFormData[0] === undefined){
+      const lastSelectedExperience = localStorage.getItem("lastSelectedExperience")
+     
+      if(lastSelectedExperience){
+        const lastSelectedArray = lastSelectedExperience.split(",")
+        lastSelectedArray[5] = lastSelectedArray[5] == "true" ? true : false
+    dispatch(setSelectedExperience(lastSelectedArray))
+      }
+    }
+    
+  },[])
+
   const formik = useFormik({
     initialValues: {
-      title: updatable ? educationFormData.current[0] : "",
-      company: updatable ? educationFormData.current[1] : "",
-      location: updatable ? educationFormData.current[2] : "",
-      from: updatable ? dateFormate(educationFormData.current[3]) : "",
-      to: updatable ? dateFormate(educationFormData.current[4]) : "",
-      current: updatable ? educationFormData.current[5] : false,
-      description: updatable ? educationFormData.current[6] : "",
+      title: "",
+      company:  "",
+      location:  "",
+      from:   "",
+      to:  "",
+      current:   false,
     },
 
     validationSchema: experienceSchema,
     onSubmit: async (initialValues) => {
-      if (educationId !== undefined && educationId !== null) {
+      if (experienceId !== undefined && experienceId !== null) {
         const res = await addExperience(
           "put",
-          `/profile/experience/${educationId}`,
+          `/profile/experience/${experienceId}`,
           initialValues
         );
         res && Alert("success", "Experience Edited Successfully", 2000);
+        if(res.status == 200){
+          dispatch(resetCurrentUser())
+        }
       } else {
         const res = await addExperience(
           "put",
@@ -51,6 +97,9 @@ const AddExperience = () => {
           initialValues
         );
         res && Alert("success", "Experience Added Successfully", 2000);
+        if(res.status == 200){
+          dispatch(resetCurrentUser())
+        }
       }
     },
   });
@@ -58,7 +107,7 @@ const AddExperience = () => {
   return (
     <div>
       <section className="container">
-        <h1 className="large text-primary">Add An Experience</h1>
+        <h1 className="large text-primary">{updatable? 'Edit' : 'Add'} An Experience</h1>
         <Form onSubmit={formik.handleSubmit}>
           <Form.Group>
             <Form.Label>Position</Form.Label>
@@ -69,7 +118,7 @@ const AddExperience = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.title}
-              error={formik.touched.title && formik.errors.title}
+              isInvalid={formik.touched.title && formik.errors.title}
             />
             {formik.touched.title && formik.errors.title && (
               <Form.Control.Feedback type="invalid">
@@ -85,7 +134,7 @@ const AddExperience = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.company}
-              error={formik.touched.company && formik.errors.company}
+              isInvalid={formik.touched.company && formik.errors.company}
             />
             {formik.touched.company && formik.errors.company && (
               <Form.Control.Feedback type="invalid">
@@ -101,7 +150,7 @@ const AddExperience = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.location}
-              error={formik.touched.location && formik.errors.location}
+              isInvalid={formik.touched.location && formik.errors.location}
             />
             {formik.touched.location && formik.errors.location && (
               <Form.Control.Feedback type="invalid">
@@ -119,7 +168,7 @@ const AddExperience = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.from}
-              error={formik.touched.from && formik.errors.from}
+              isInvalid={formik.touched.from && formik.errors.from}
             />
           </Form.Group>
           <Form.Group>
@@ -130,7 +179,7 @@ const AddExperience = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.to}
-              error={formik.touched.to && formik.errors.to}
+              isInvalid={formik.touched.to && formik.errors.to}
             />
           </Form.Group>
           <Form.Group className="mt-3">
@@ -141,7 +190,7 @@ const AddExperience = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.current}
-              error={formik.touched.current && formik.errors.current}
+              isInvalid={formik.touched.current && formik.errors.current}
             />
           </Form.Group>
           <Form.Group>
@@ -153,7 +202,7 @@ const AddExperience = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.description}
-              error={formik.touched.description && formik.errors.description}
+              isInvalid={formik.touched.description && formik.errors.description}
             />
             {formik.touched.location && formik.errors.location && (
               <Form.Control.Feedback type="invalid">

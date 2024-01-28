@@ -98,9 +98,12 @@ const Dashboard = () => {
               </div>
             )}
 
-            <button className="btn btn-danger" style={{ marginTop: "0.8em" }}>
+            <div className="deleteAccountButtonContainer">
+
+            <button className="btn btn-danger deleteAccountButton "   style={{ marginTop: "0.8em" }}>
               Delete my account
             </button>
+            </div>
           </div>
         </div>
       ) : (

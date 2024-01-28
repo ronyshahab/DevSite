@@ -43,7 +43,6 @@ export const experienceSchema = YUP.object({
     }),
   to: YUP.date()
     .typeError("Enter in date formate(yyyy-mm-dd)")
-    .required("This field is required")
     .test((value, { parent }) => {
       const fromDate = parent.from;
       return value > fromDate;

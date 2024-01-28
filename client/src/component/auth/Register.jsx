@@ -22,7 +22,7 @@ const Register = ({ show, handleClose, openLogin }) => {
   const postUser = async (values) => {
     try {
       const res = await axios.post(`http://localhost:5000/api/user`, values, config);
-      setCurrentUser(res.data.email)
+      // setCurrentUser(res.data.email)
       if (res) {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("email", formik.values.email);

@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import getData from "../../../commonFunction/getDataFromAxios";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
+import { setSelectedEducation } from "../../../redux/slices/SelectedEducation.slice";
 
 const EducationTable = ({ data }) => {
   const tableInheritorRef = useRef();
@@ -18,8 +19,8 @@ const EducationTable = ({ data }) => {
   const navigate = useNavigate();
   const handleUpdateIcon = async (data) => {
     const updatable = true;
-
-    // dispatch(setEducationFormData(data));
+    console.log(data);
+    dispatch(setSelectedEducation(data));
 
     navigate(`/add-education/${updatable}`);
   };
