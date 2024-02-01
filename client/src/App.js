@@ -19,7 +19,7 @@ const CreateProfile = lazy(() =>
 );
 const AddExperience = lazy(() => import("./component/forms/AddExperience"));
 const AddEducation = lazy(() => import("./component/forms/AddEducation"));
-const Posts = lazy(() => import("./component/layout/Posts"));
+const Posts = lazy(() => import("./component/layout/posts/Posts"));
 const Post = lazy(() => import("./component/layout/Post"));
 const Dashboard = lazy(() => import("./component/layout/dashboard/Dashboard"));
 const Register = lazy(() => import("./component/auth/Register"));

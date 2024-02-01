@@ -1,0 +1,28 @@
+.postContainer{
+    background-color: rgb(238, 238, 238);
+    padding: 1em;
+    border-radius: 5px;
+    margin: 1em;
+}
+
+.postImg{
+position: relative;
+top: -25px;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+width: 100px;
+height: fit-content;
+}
+
+.postImg img{
+    height: 40px;
+   width: 40px; 
+}
+
+.postDetail{
+    margin-top: -20px;
+    background-color: white;
+    padding: 1em;
+}

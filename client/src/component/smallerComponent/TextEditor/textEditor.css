@@ -1,0 +1,88 @@
+.textEditorContainer{
+    border: 2px solid rgb(209, 209, 209);
+    border-radius: 5px;
+    min-height: 200px;
+}
+
+.textEditorHeaderContainer{
+    background-color: rgb(209, 209, 209) ;
+    display: flex;
+    gap: 0.2em;
+    align-items: center;
+}
+
+.textEditorContent{
+    padding: 1em;
+}
+
+.textEditorButton{
+    border: none;
+    outline: none;
+    background-color: transparent;
+    margin: 0.2em 0.4em;
+    border-radius: 3px;
+}
+
+.textEditorContent ul{
+    list-style: disc;
+}
+
+.textEditorButton > img{
+    height: 15px;
+    width: 15px;
+}
+
+.tiptap{
+    height: 300px;
+    padding: 1em;
+    overflow-x: scroll;
+}
+
+.activeButton{
+    background-color: rgb(170, 170, 170) ;
+
+}
+
+p code{
+    background-color: rgb(216, 216, 216);
+    color:rgb(117, 117, 117) ;
+}
+
+pre{
+    background-color: rgba(58, 58, 58, 0.829);
+    color: white;
+    padding: 1em;
+    border-radius: 2px;
+}
+
+.dropdown{
+    display: inline;
+}
+
+input[type="color"]{
+    width: 20px;
+    height: 20px;
+    margin-top: 5px;
+}
+
+.inputColorButtonContainer{
+    display: flex;
+    justify-content: center;
+    margin-left: 0.2em;
+}
+
+.redoButton{
+    transform: scaleX(-1);
+    margin-left: -1px;
+}
+
+p > a{
+    color: rgb(76, 0, 255) !important;
+}
+
+img{
+    width: 200px;
+  height: 200px; 
+  object-fit: contain;
+    
+}

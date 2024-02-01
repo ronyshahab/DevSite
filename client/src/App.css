@@ -641,32 +641,6 @@ flex: 3;
 .expTableContainer td{
   padding: 5px 10px;
 }
-.postContainer{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2em;
-  margin-top: 1em;
-  padding: 1em;
-  border: 2px solid rgb(201, 200, 200);
-}
-.postImg{
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-}
-.postDetail{
-  flex: 6;
-}
-.postCount{
-  margin-top: 1em;
-}
-.postCount button{
-  padding: 5px 10px;
-  margin: 2px;
-}
 
 .eduTableContainer  th {
   padding: 5px 10px;
