@@ -48,10 +48,6 @@ const Register = ({ show, handleClose, openLogin }) => {
 
   const formData = new FormData();
   const handleSubmit = async (values) => {
-    
-    
-    
-    
     formData.append("profileImage", uploadImage);
     formData.append("name", formik.values.name);
     formData.append("email", formik.values.email);

@@ -41,12 +41,11 @@ import TextAlign from "@tiptap/extension-text-align";
 const limit = 1200;
 
 const TextEditor = ({ onSubmit }) => {
-  const [content, setContent] = useState();
+
   const [highLightColor, setHighLightColor] = useState("#FFF59D");
-  const [imgArray, setImgArray] = useState([]);
 
   const handleSubmit = () => {
-    onSubmit(editor.getJSON());
+    onSubmit(editor.getHTML());
   };
   const handleFileInputChange = (e) => {
     const files = e.target.files;
@@ -71,6 +70,7 @@ const TextEditor = ({ onSubmit }) => {
     });
   };
 
+  const content = ''
   const editor = useEditor({
     extensions: [
       Document,

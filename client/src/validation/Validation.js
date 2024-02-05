@@ -97,3 +97,7 @@ export const registerSchema = YUP.object({
       }
     }),
 });
+
+export const commentSchema = YUP.object({
+  content: YUP.string().required("Please leave a comment"),
+});

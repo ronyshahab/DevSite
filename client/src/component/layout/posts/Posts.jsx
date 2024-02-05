@@ -1,61 +1,60 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import TextEditor from '../../smallerComponent/TextEditor/TextEditor';
-import axios from "axios"
+import TextEditor from "../../smallerComponent/TextEditor/TextEditor";
+import axios from "axios";
 import getData from "../../../commonFunction/getDataFromAxios";
 // import {Content} from "tiptap"
-import "./post.css"
+import "./post.css";
+import ShowPost from "./ShowPost";
+import { useSelector } from "react-redux";
 const Posts = () => {
   const navigate = useNavigate();
 
-  const [postArray , setPostArray ] = useState([])
-  
+  const [postArray, setPostArray] = useState([]);
+  const currentUser = useSelector((s) => s.currentUser);
+
   const fetchPost = async (method, url, data) => {
     const result = await getData(method, url, data);
-    setPostArray(prevPostArray => [...prevPostArray, ...result.data]);  };
+    if (result) {
+      setPostArray([...result.data]);
+    }
+  };
 
   const handleSubmission = async (submittedContent) => {
-    const formData = new FormData()
-    submittedContent.content.forEach((obj)=>{
-      if( obj.type === 'image'){
-        const byteCharacters = atob(obj.attrs.src.split(',')[1]);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: 'image/jpeg' });
-        formData.append("images", blob)
-      }
-    })
-    formData.append('content', JSON.stringify(submittedContent))
- 
+    const formData = new FormData();
+    formData.append("content", submittedContent);
+
     const config = {
       headers: {
         "Content-Type": "multipart/form-data",
-          "token": localStorage.getItem("token")
+        token: localStorage.getItem("token"),
       },
     };
 
     try {
-      const data =  await axios.post(`http://localhost:5000/api/post`, formData, config);
-
+      await axios.post(`http://localhost:5000/api/post`, formData, config);
     } catch (error) {
       console.error(error);
     }
   };
 
-  useEffect(()=>{
-    fetchPost("get",'http://localhost:5000/api/post')
-    
-  },[])
-
-  useEffect(()=>{
-    if(postArray.length>1){
-      console.log(postArray[0].content)
+  useEffect(() => {
+    if (!postArray.length) {
+      fetchPost("get", "http://localhost:5000/api/post");
     }
-  },[postArray])
-  
+
+  }, [postArray]);
+
+  const addLike = async (post) => {
+    const data = await getData(
+      "put",
+      `http://localhost:5000/api/post/likes/${post._id}`
+    );
+    if(data.status ==200) {
+      fetchPost("get", "http://localhost:5000/api/post");
+
+    }
+  };
 
   return (
     <div>
@@ -81,41 +80,45 @@ const Posts = () => {
           >
             Say something
           </p>
-          <TextEditor onSubmit={handleSubmission}/>
+          <TextEditor onSubmit={handleSubmission} />
         </div>
-        {
-          postArray.map((post)=>
-            (
-              <div className="postContainer">
-              <div className="postImg">
-                <img
-                  src={post.avatar}
-                  className="round-img profileImg"
-                  style={{ marginTop: "2em" }}
-                  alt=""
-                />
-                <p className="text-primary"> {post.name}</p>
+        {postArray.length > 0 && currentUser && currentUser.user &&postArray.map((post, index) => (
+          <div className="postContainer" key={index}>
+            <div className="postImg">
+              <img
+                src={post.avatar}
+                className="round-img profileImg"
+                style={{ marginTop: "2em" }}
+                alt=""
+                onClick={()=> navigate(`/profile/${post.user}`)}
+              />
+              <p className="text-primary"> {post.name}</p>
+            </div>
+            <div className="postDetail">
+              <div className="postText">
+                <ShowPost content={post.content} />
               </div>
-              <div className="postDetail">
-                <div className="postText">
-                </div>
-                <div className="postCount">
-                  <button>
-                    <i className="fa-solid fa-thumbs-up"></i>4
-                  </button>
-                  <button>
-                    <i className="fa-solid fa-thumbs-down"></i>
-                  </button>
-                  <Link to={"/post"}>
-                    {" "}
-                    <button className="btn btn-primary">Discussion</button>{" "}
-                  </Link>
-                </div>
+              <div className="postCount">
+                <button onClick={() => addLike(post)}>
+                  {post.likes.find((like) => like.user === currentUser.user._id) ? (
+                    <span>
+                      <i
+                        style={{ color: "#4b2fcc" }}
+                        className="fa-solid fa-thumbs-up"
+                      ></i>{" "}
+                      {post.likes.length}
+                    </span>
+                  ) : (
+                    <span> <i className="fa-solid fa-thumbs-up"></i> {post.likes.length > 0 && post.likes.length}</span>
+                  )}
+                </button>
+                <Link to={`/post/${post._id}`}>
+                  <button className="btn btn-primary">Discussion</button>{" "}
+                </Link>
               </div>
-            </div> 
-            )
-          )
-        }
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -26,3 +26,58 @@ height: fit-content;
     background-color: white;
     padding: 1em;
 }
+
+.postText{
+    max-height: 300px;
+    overflow: hidden;
+}
+
+.postProfileImg{
+    height: 50px ;
+    width: 50px ;
+}
+.singlePostContainer{
+
+    border-radius: 12px;
+    background-color: rgb(226, 226, 226) !important;
+}
+
+.postContentContainer{
+    background-color: rgb(255, 255, 255);
+    padding: 1em;
+    height: fit-content !important;
+}
+
+.postContentContainer img{
+    height: 100%;
+    width: 100%;
+}
+
+.commentContainer{
+    border: 2px solid rgb(207, 207, 207);
+    border-radius: 15px;
+    padding: 1em;
+    margin: 1em;
+}
+
+.commentContainer img{
+    height: 30px;
+    width: 30px;
+}
+
+.commentContentContainer{
+    padding: 1em;
+}
+
+.postCount button{
+    border: none;
+    outline: none;
+    background-color: transparent;
+    margin: 0 0.5em;
+}
+
+.commentContainer{
+    display: flex;
+
+    justify-content: space-between;
+}

@@ -335,7 +335,7 @@ const CreateProfile = () => {
               >
                 Submit
               </button>
-              <a className="btn btn-light my-1" onClick={() => navigate(-1)}>
+              <a className="btn btn-light my-1" onClick={() => navigate('/posts')}>
                 Go Back
               </a>
             </Form>{" "}

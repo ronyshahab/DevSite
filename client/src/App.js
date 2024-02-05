@@ -20,7 +20,7 @@ const CreateProfile = lazy(() =>
 const AddExperience = lazy(() => import("./component/forms/AddExperience"));
 const AddEducation = lazy(() => import("./component/forms/AddEducation"));
 const Posts = lazy(() => import("./component/layout/posts/Posts"));
-const Post = lazy(() => import("./component/layout/Post"));
+const Post = lazy(() => import("./component/layout/posts/Post"));
 const Dashboard = lazy(() => import("./component/layout/dashboard/Dashboard"));
 const Register = lazy(() => import("./component/auth/Register"));
 const Login = lazy(() => import("./component/auth/Login"));
@@ -69,6 +69,16 @@ const App = () => {
               }
             ></Route>
             <Route
+              path="profile/:id"
+              element={
+                <AuthGuard>
+                  <LoggedInUser>
+                    <Profile />
+                  </LoggedInUser>{" "}
+                </AuthGuard>
+              }
+            ></Route>
+            <Route
               path="create-profile"
               element={
                 <AuthGuard>
@@ -106,7 +116,7 @@ const App = () => {
               }
             ></Route>
             <Route
-              path="post"
+              path="post/:id"
               element={
                 <AuthGuard>
                   <LoggedInUser>
