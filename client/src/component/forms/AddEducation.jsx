@@ -83,7 +83,6 @@ const AddEducation = () => {
     },
     validationSchema: educationSchema,
     onSubmit: async (initialValues) => {
-      console.log(updatable);
       if (educationId !== undefined && educationId !== null) {
         const res = await addEducation(
           "put",

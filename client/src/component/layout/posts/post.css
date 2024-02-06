@@ -81,3 +81,7 @@ height: fit-content;
 
     justify-content: space-between;
 }
+
+*{
+    transition: all 0.8s;
+}

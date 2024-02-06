@@ -2,7 +2,7 @@
 import "./App.css";
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import { Suspense, lazy } from "react";
-import Landing from "./component/layout/Landing";
+import Landing from "./component/layout/landing/Landing";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";

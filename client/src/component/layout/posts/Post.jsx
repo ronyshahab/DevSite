@@ -56,7 +56,6 @@ const Post = () => {
       if(await showAlert()){
 
         const data = await getData('delete', `/post/comment/${postId}/${e._id}`)
-        console.log(data)
         if(data.status === 200){
           Alert("success", "Comment Removed Successfully");
           setCurrentPost(data.data);

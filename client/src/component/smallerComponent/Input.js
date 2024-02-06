@@ -12,8 +12,6 @@ const Input = ({
   title,
   options = [],
 }) => {
-  // const {type} = props
-  // console.log(props)
   return (
     <>
       {inputType == "normal" && (

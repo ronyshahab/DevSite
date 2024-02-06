@@ -129,9 +129,6 @@ const Profile = () => {
     }
   }, [profileData]);
 
-  useEffect(() => {
-    console.log(postData);
-  }, [postData]);
 
   return (
     <>

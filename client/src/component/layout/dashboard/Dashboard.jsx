@@ -25,7 +25,7 @@ const Dashboard = () => {
   }, []);
 
   const handleChange = () => {
-    navigate("/profile");
+    navigate(-1);
   };
 
   const updatable = false;

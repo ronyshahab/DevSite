@@ -80,8 +80,6 @@ const ExperienceTable = ({ data }) => {
     table.appendChild(tr);
     result.forEach((i) => {
       const data = Object.values(i);
-      //   const object = formateObject(header, data)
-      //   console.log(object)
       const tr = document.createElement("tr");
       for (let j = 0; j <= data.length - 1; j++) {
         const td = document.createElement("td");
@@ -120,7 +118,6 @@ const ExperienceTable = ({ data }) => {
           icon2.style.color = "#0099ff";
           icon1.classList.add("fa-solid", "fa-trash");
           icon2.classList.add("fa-solid", "fa-pencil");
-          // console.log(data)
           icon1.onclick = () => handleDeleteIcon(data[data.length - 1]);
           icon2.onclick = () => handleUpdateIcon(data);
           td.appendChild(icon1);

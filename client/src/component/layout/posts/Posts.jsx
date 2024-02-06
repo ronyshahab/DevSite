@@ -11,6 +11,7 @@ const Posts = () => {
   const navigate = useNavigate();
 
   const [postArray, setPostArray] = useState([]);
+  const [showTextArea, setShowTextArea] = useState(false);
   const currentUser = useSelector((s) => s.currentUser);
 
   const fetchPost = async (method, url, data) => {
@@ -42,7 +43,6 @@ const Posts = () => {
     if (!postArray.length) {
       fetchPost("get", "http://localhost:5000/api/post");
     }
-
   }, [postArray]);
 
   const addLike = async (post) => {
@@ -50,9 +50,8 @@ const Posts = () => {
       "put",
       `http://localhost:5000/api/post/likes/${post._id}`
     );
-    if(data.status ==200) {
+    if (data.status == 200) {
       fetchPost("get", "http://localhost:5000/api/post");
-
     }
   };
 
@@ -77,48 +76,57 @@ const Posts = () => {
           <p
             className="btn btn-primary"
             style={{ color: "white", width: "100vw", marginRight: "160px" }}
-          >
+            onClick={() => setShowTextArea((pre) => !pre)}          >
             Say something
           </p>
-          <TextEditor onSubmit={handleSubmission} />
+          {showTextArea && <TextEditor onSubmit={handleSubmission} />}
         </div>
-        {postArray.length > 0 && currentUser && currentUser.user &&postArray.map((post, index) => (
-          <div className="postContainer" key={index}>
-            <div className="postImg">
-              <img
-                src={post.avatar}
-                className="round-img profileImg"
-                style={{ marginTop: "2em" }}
-                alt=""
-                onClick={()=> navigate(`/profile/${post.user}`)}
-              />
-              <p className="text-primary"> {post.name}</p>
-            </div>
-            <div className="postDetail">
-              <div className="postText">
-                <ShowPost content={post.content} />
+        {postArray.length > 0 &&
+          currentUser &&
+          currentUser.user &&
+          postArray.map((post, index) => (
+            <div className="postContainer" key={index}>
+              <div className="postImg">
+                <img
+                  src={post.avatar}
+                  className="round-img profileImg"
+                  style={{ marginTop: "2em" }}
+                  alt=""
+                  onClick={() => navigate(`/profile/${post.user}`)}
+                />
+                <p className="text-primary"> {post.name}</p>
               </div>
-              <div className="postCount">
-                <button onClick={() => addLike(post)}>
-                  {post.likes.find((like) => like.user === currentUser.user._id) ? (
-                    <span>
-                      <i
-                        style={{ color: "#4b2fcc" }}
-                        className="fa-solid fa-thumbs-up"
-                      ></i>{" "}
-                      {post.likes.length}
-                    </span>
-                  ) : (
-                    <span> <i className="fa-solid fa-thumbs-up"></i> {post.likes.length > 0 && post.likes.length}</span>
-                  )}
-                </button>
-                <Link to={`/post/${post._id}`}>
-                  <button className="btn btn-primary">Discussion</button>{" "}
-                </Link>
+              <div className="postDetail">
+                <div className="postText">
+                  <ShowPost content={post.content} />
+                </div>
+                <div className="postCount">
+                  <button onClick={() => addLike(post)}>
+                    {post.likes.find(
+                      (like) => like.user === currentUser.user._id
+                    ) ? (
+                      <span>
+                        <i
+                          style={{ color: "#4b2fcc" }}
+                          className="fa-solid fa-thumbs-up"
+                        ></i>{" "}
+                        {post.likes.length}
+                      </span>
+                    ) : (
+                      <span>
+                        {" "}
+                        <i className="fa-solid fa-thumbs-up"></i>{" "}
+                        {post.likes.length > 0 && post.likes.length}
+                      </span>
+                    )}
+                  </button>
+                  <Link to={`/post/${post._id}`}>
+                    <button className="btn btn-primary">Discussion</button>{" "}
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );

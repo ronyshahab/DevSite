@@ -4,7 +4,6 @@ import {
   dateFormate,
   capitalize,
 } from "../../../commonFunction/commonFunction";
-// import { setEducationFormData } from "../../../redux/actions/actions";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import getData from "../../../commonFunction/getDataFromAxios";
@@ -14,12 +13,10 @@ import { setSelectedEducation } from "../../../redux/slices/SelectedEducation.sl
 
 const EducationTable = ({ data }) => {
   const tableInheritorRef = useRef();
-  // console.log(data)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleUpdateIcon = async (data) => {
     const updatable = true;
-    console.log(data);
     dispatch(setSelectedEducation(data));
 
     navigate(`/add-education/${updatable}`);
@@ -44,7 +41,6 @@ const EducationTable = ({ data }) => {
       try {
         const res = await getData("delete", `/profile/education/${data}`);
         location.reload();
-        console.log(res);
       } catch (error) {
         console.log(error.message);
       }
@@ -82,7 +78,6 @@ const EducationTable = ({ data }) => {
     table.appendChild(tr);
     result.forEach((i) => {
       const data = Object.values(i);
-      // console.log(data)
       const tr = document.createElement("tr");
       for (let j = 0; j <= data.length - 1; j++) {
         const td = document.createElement("td");
@@ -116,7 +111,6 @@ const EducationTable = ({ data }) => {
           icon2.style.color = "#0099ff";
           icon1.classList.add("fa-solid", "fa-trash");
           icon2.classList.add("fa-solid", "fa-pencil");
-          // console.log(data)
           icon1.onclick = () => handleDeleteIcon(data[data.length - 1]);
           icon2.onclick = () => handleUpdateIcon(data);
           td.appendChild(icon1);

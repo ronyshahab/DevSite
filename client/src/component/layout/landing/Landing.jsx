@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
-import Login from "../auth/Login";
-import Register from "../auth/Register";
+import Login from "../../auth/Login";
+import Register from "../../auth/Register";
+import "./landing.css"
+import TyperWriter from "../../smallerComponent/TypeWriter/TyperWriter";
 const Landing = () => {
   const [showLogin, setLogin] = useState(false);
   const [showRegister, setRegister] = useState(false);
   const navigate = useNavigate();
   const user = localStorage.getItem("user");
-  // console.log(user)
+
+  const words = ["Developer", "Student", "Blogger", "FreeLancer"]
+
+  let wordIndex = 0
   useEffect(() => {
     if (user !== undefined && user !== null) {
       navigate("/posts");
@@ -33,7 +38,9 @@ const Landing = () => {
       <div className="landing">
         <div className="dark-overlay">
           <div className="landing-inner">
-            <h2 className="large">A Website for Developers</h2>
+            <div className="textContainer">
+            <h2 className="large text">A Website for <TyperWriter dataArray={['Developers', 'Students', 'Bloggers', "FreeLancers", "Tech-Enthusiasts"]} delay={2000} /></h2>
+            </div>
             <p className="lead">
               Create developer profile/portfolio, share posts and get help from
               other developers
