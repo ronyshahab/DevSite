@@ -9,6 +9,7 @@ const User = require("../../../models/User.js");
 const cloudinary = require("../../../utils/cloudinary.js");
 const { uploadAImageOnCloudinary } = require("../../../utils/cloudinary.js");
 const { upload } = require("../../../utils/multer.js");
+const auth = require("../../../middleware/auth.js");
 
 router.get("/", async (req, res) => {
   try {
@@ -96,5 +97,27 @@ router.post(
     }
   }
 );
+
+router.put("/follow/:id", auth, async (req, res) => {
+  try {
+    const requestedUser = req.params.id;
+
+    const user = await User.findOne({ _id: req.user.id });
+    if (!user) {
+      return res.status(400).send("User not found");
+    }
+
+    if (user.followers.includes(requestedUser)) {
+      return res.status(400).send("User is already followed");
+    }
+
+    user.followers.unshift(requestedUser);
+    await user.save();
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+});
 
 module.exports = router;

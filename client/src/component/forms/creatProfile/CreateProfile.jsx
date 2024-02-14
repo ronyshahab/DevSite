@@ -8,15 +8,24 @@ import { Form } from "react-bootstrap";
 import SelectComponent from "../../smallerComponent/SelectComponent";
 import { createProileSchema } from "../../../validation/Validation";
 import "./createProfile.css";
+import { Alert } from "../../smallerComponent/Toast";
 const CreateProfile = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [profileData, setProfileData] = useState([]);
 
   const editProfile = async (method, url, data) => {
-    const result = await getData(method, url, data);
-    navigate("/dashboard");
-    return result;
+    try {
+      const result = await getData(method, url, data);
+      if(result.status == 200){
+        
+        navigate("/dashboard");
+        return result;
+      }
+    } catch (error) {
+      console.log(error)
+      Alert("error", error.response.data.errors[0].msg)
+    }
   };
 
   const handleSubmit = async () => {
@@ -51,15 +60,15 @@ const CreateProfile = () => {
     validationSchema: createProileSchema,
   });
 
+  const fetchData = async () => {
+    try {
+      const data = await getData("get", "/profile/me");
+      setProfileData(data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getData("get", "/profile/me");
-        setProfileData(data.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
 
     fetchData();
   }, []);
@@ -104,8 +113,7 @@ const CreateProfile = () => {
 
   return (
     <div>
-      <section className="container">
-        {/* checking for the data is avaialable or not */}
+      <section className="createProfilecontainer container">
 
         {profileData && Object.keys(profileData).length !== 0 && (
           <>
@@ -245,17 +253,6 @@ const CreateProfile = () => {
                   Add
                 </button>
               </Form.Group>
-              {/* <div className="form-group">
-                <Input
-                  title={"Github:"}
-                  type="text"
-                  placeholder="Github Username"
-                  name="githubusername"
-                  value={formik.values.githubusername}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-              </div> */}
               <Form.Group className="mb-3">
                 <Form.Label>Bio</Form.Label>
                 <Form.Control

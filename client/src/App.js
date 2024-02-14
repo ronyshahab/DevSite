@@ -1,7 +1,7 @@
 "use client";
 import "./App.css";
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import Landing from "./component/layout/landing/Landing";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Provider } from "react-redux";
@@ -12,6 +12,8 @@ import { ToastContainer } from "./component/smallerComponent/Toast";
 import "react-toastify/dist/ReactToastify.css";
 import AuthGuard from "./component/smallerComponent/AuthGuard";
 import LoggedInUser from "./component/smallerComponent/LoggedInUser";
+import SingleChat from "./component/chat/SingleChat";
+import io from "socket.io-client";
 const Profiles = lazy(() => import("./component/layout/profile/Profiles"));
 const Profile = lazy(() => import("./component/layout/profile/Profile"));
 const CreateProfile = lazy(() =>
@@ -28,6 +30,7 @@ const Login = lazy(() => import("./component/auth/Login"));
 const App = () => {
   const linkName = ["Developer", "Post"];
   const linkPath = ["/profiles", "/post"];
+
   return (
     <Provider store={store}>
       <Router>
@@ -74,6 +77,16 @@ const App = () => {
                 <AuthGuard>
                   <LoggedInUser>
                     <Profile />
+                  </LoggedInUser>{" "}
+                </AuthGuard>
+              }
+            ></Route>
+            <Route
+              path="chat/:id"
+              element={
+                <AuthGuard>
+                  <LoggedInUser>
+                    <SingleChat />
                   </LoggedInUser>{" "}
                 </AuthGuard>
               }

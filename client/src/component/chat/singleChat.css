@@ -1,0 +1,50 @@
+.message{
+    border-radius: 15px;
+    border: 2px solid grey;
+    padding: 1em;
+    margin: 1em;
+    max-width: fit-content;
+    position: relative;
+}
+
+.messageContainer{
+    height: 90vh;
+  overflow-y: auto; 
+  white-space: nowrap; 
+  white-space: normal;
+
+}
+
+.container{
+    position: relative;
+    height: 95vh;
+}
+.chatInputContainer{
+    position: fixed;
+    bottom: 0;
+    /* width: 90%; */
+    display: inline;
+
+}
+
+.chatInputControl{
+    display: flex;
+    padding: 0.2em;
+    width: 80vw;
+    /* background-color: aqua; */
+}
+
+.profileImg{
+    height: fit-content;
+    margin: 0.5em;
+}
+.img{
+    height: 40px;
+    width: 40px;
+}
+.myMessage{
+    background-color: #4c2fcc9f;
+    color: white;
+    position: relative;
+    right: 0;
+}

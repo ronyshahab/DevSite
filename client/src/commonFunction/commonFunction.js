@@ -1,18 +1,21 @@
 import Swal from "sweetalert2";
 
 export const capitalize = (string) => {
-  let testString = string.trim();
-  let resultString = "";
-  testString = testString.split(" ");
-  testString.forEach((element) => {
-    if (element !== "") {
-      element = element.split("");
-      element[0] = element[0].toUpperCase();
-      element = element.join("");
-      resultString = resultString + element + " ";
-    }
-  });
-  return resultString;
+  if (string) {
+    let testString = string.trim();
+    let resultString = "";
+    testString = testString.split(" ");
+    testString.forEach((element) => {
+      if (element !== "") {
+        element = element.split("");
+        element[0] = element[0].toUpperCase();
+        element = element.join("");
+        resultString = resultString + element + " ";
+      }
+    });
+    return resultString;
+  }
+  return null;
 };
 
 export const dateFormate = (date) => {

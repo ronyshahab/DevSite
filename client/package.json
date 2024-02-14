@@ -56,6 +56,7 @@
     "redux": "^4.2.0",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.4.2",
+    "socket.io-client": "^4.7.4",
     "sweetalert2": "^11.10.1",
     "tiptap": "^1.32.2",
     "tiptap-extensions": "^1.35.2",

@@ -5,7 +5,7 @@ const TyperWriter = ({dataArray, delay}) => {
     const [text,setText] = useState('')
     const [isDelete, setIsDelete] = useState(false);
     const [loop, setLoop] = useState(0);
-    const changeTextValue= async(clearthis) =>{
+    const changeTextValue= async() =>{
         const i = loop % dataArray.length
 
         const currentWord = dataArray[i]

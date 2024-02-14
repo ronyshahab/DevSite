@@ -4,3 +4,7 @@
     align-items: center;
     gap: 1em;
 }
+
+.createProfilecontainer{
+    min-height:150vh;
+}

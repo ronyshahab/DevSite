@@ -70,7 +70,7 @@ export const loginSchema = YUP.object({
 });
 
 export const createProileSchema = YUP.object({
-  company: YUP.string().required().max("50"),
+  company: YUP.string().max("50"),
   skills: YUP.array().of(YUP.string()).required(),
   status: YUP.string().required(),
   bio: YUP.string().required(),

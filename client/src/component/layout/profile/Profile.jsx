@@ -26,10 +26,12 @@ const Profile = () => {
   let currentUser = useSelector((s) => s.currentUser);
 
   const fetchData = async () => {
+    console.log("fetch data is called")
+    const userId = id? id : currentUser.user._id
     try {
       const data = await getData(
         "get",
-        `http://localhost:5000/api/profile/user/${id}`
+        `http://localhost:5000/api/profile/user/${userId}`
       );
       setProfileData(data.data);
     } catch (error) {
@@ -39,11 +41,14 @@ const Profile = () => {
 
   const fetchPostData = async () => {
     try {
-      const data = await getData(
-        "get",
-        `http://localhost:5000/api/post/user/${profileData.user._id}`
-      );
-      setPostData(data.data);
+      if(profileData.user?._id){
+
+        const data = await getData(
+          "get",
+          `http://localhost:5000/api/post/user/${profileData.user?._id}`
+          );
+          setPostData(data.data);
+        }
     } catch (error) {
       console.log(error);
     }
@@ -66,7 +71,7 @@ const Profile = () => {
           <li key={i}>
             {" "}
             <i
-              class="fa-solid fa-check"
+              className="fa-solid fa-check"
               style={{ color: "lightgreen" }}
             ></i>{" "}
             {capitalize(i)}
@@ -76,12 +81,11 @@ const Profile = () => {
     }
   }
   useEffect(() => {
-    if (id) {
+    if(currentUser.user){
+
       fetchData();
-    } else {
-      setProfileData(currentUser);
     }
-  }, []);
+  }, [currentUser]);
   const handleImageClick = () => {
     if (!id) {
       fileInputRef.current.click();
@@ -129,7 +133,6 @@ const Profile = () => {
     }
   }, [profileData]);
 
-
   return (
     <>
       {profileData &&
@@ -137,8 +140,14 @@ const Profile = () => {
       Object.keys(profileData).length !== 0 ? (
         <>
           <div className="container">
-            {id ? (
-              ""
+            {currentUser.user && currentUser.user._id !== id ? (
+              <button
+              className="btn btn-primary"
+              style={{ marginBottom: "1em" }}
+              onClick={()=> navigate(`/chat/${id}`)}
+            >
+              Message
+            </button>
             ) : (
               <button
                 className="btn btn-primary"
@@ -242,8 +251,8 @@ const Profile = () => {
                   {profileData.experience.length !== 0 && (
                     <div className="expContainer">
                       <h2 className="text-primary">Experience</h2>
-                      {profileData.experience.map((i) => {
-                        return <Experience data={i} key={i.title} />;
+                      {profileData.experience.map((i, index) => {
+                        return <Experience data={i} key={index} />;
                       })}
                     </div>
                   )}
@@ -251,8 +260,8 @@ const Profile = () => {
                 {profileData.education.length !== 0 && (
                   <div className="eduContainer">
                     <h2 className="text-primary">Education</h2>
-                    {profileData.education.map((i) => {
-                      return <Education data={i} key={i.school} />;
+                    {profileData.education.map((i, index) => {
+                      return <Education data={i} key={index} />;
                     })}
                   </div>
                 )}
@@ -262,9 +271,9 @@ const Profile = () => {
           <div className="profilePostContainer">
             {postData?.length > 0 ? (
               <>
-                <div className="profilePost">{postData.map((post)=>{
+                <div className="profilePost">{postData.map((post, index)=>{
                   return (
-                    <div onClick={()=> navigate(`/post/${post._id}`)}>
+                    <div key={index} onClick={()=> navigate(`/post/${post._id}`)}>
 
                     <ShowPost  content={post.content}/>
                     </div>

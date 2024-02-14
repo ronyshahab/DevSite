@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const Schema = mongoose.Schema;
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -20,7 +20,12 @@ const UserSchema = new mongoose.Schema({
   avatar: {
     type: String,
   },
-
+  followers: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "users",
+    },
+  ],
   date: {
     type: Date,
     default: Date.now,

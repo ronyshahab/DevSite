@@ -41,7 +41,7 @@ router.post(
 
 router.get("/", auth, async (req, res) => {
   try {
-    const post = await Post.find().sort({ Date: -1 }).limit(10);
+    const post = await Post.find().sort({ date: -1 }).limit(10);
     res.send(post);
   } catch (err) {
     console.error(err.message);
@@ -68,7 +68,7 @@ router.get("/user/:id", auth, async (req, res) => {
   try {
     const posts = await Post.find({ user: req.params.id });
     if (!posts || posts.length === 0) {
-      return res.status(404).json({ msg: "No posts found for this user" });
+      return res.status(200).json({ msg: "No posts found for this user" });
     }
     return res.json(posts);
   } catch (err) {

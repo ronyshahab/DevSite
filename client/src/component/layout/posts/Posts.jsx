@@ -45,6 +45,12 @@ const Posts = () => {
     }
   }, [postArray]);
 
+  useEffect(()=>{
+    if(currentUser.msg){
+      navigate("/create-profile")
+    }
+  },[currentUser])
+
   const addLike = async (post) => {
     const data = await getData(
       "put",
@@ -83,7 +89,7 @@ const Posts = () => {
         </div>
         {postArray.length > 0 &&
           currentUser &&
-          currentUser.user &&
+          currentUser.user ?
           postArray.map((post, index) => (
             <div className="postContainer" key={index}>
               <div className="postImg">
@@ -126,7 +132,9 @@ const Posts = () => {
                 </div>
               </div>
             </div>
-          ))}
+          )) : <div className="warningContainer">
+              <h2>Please make a profile to see post</h2>
+            </div>}
       </div>
     </div>
   );
