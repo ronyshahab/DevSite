@@ -3,25 +3,29 @@ import "./navbar.css";
 import DropDown from "../DropDown/DropDown";
 import { alertUser } from "../../../commonFunction/commonFunction";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { resetCurrentUser } from "../../../redux/slices/CurrentUser.slice";
-import GearIcon from "../../../assets/icons/white-gear-solid.svg"
-import CodeIcon from "../../../assets/icons/code-solid.svg"
-import LogoutIcon from "../../../assets/icons/right-from-bracket-solid.svg"
+import GearIcon from "../../../assets/icons/white-gear-solid.svg";
+import CodeIcon from "../../../assets/icons/code-solid.svg";
+import { Form } from "react-bootstrap";
+import { useFormik } from "formik";
+import getData from "../../../commonFunction/getDataFromAxios";
+import Suggestion from "../suggestion/Suggestion";
+
 const Navbar = () => {
-  const [user, setUser] = useState();
+
   const navigate = useNavigate();
-  const dispatch = useDispatch()
-  useEffect(() => {
-    setUser(localStorage.getItem("user"));
-  }, []);
+  const dispatch = useDispatch();
+  const [searchedUser, setSearchedUser] = useState(null)
+
+  const isLogin = useSelector( (s) => s.currentUser)
 
   const settingButtonRef = useRef(null);
 
   const handleLogoutClick = async () => {
     if (await alertUser("logoutUser")) {
       localStorage.clear();
-      dispatch(resetCurrentUser())
+      dispatch(resetCurrentUser());
     }
     navigate("/");
   };
@@ -34,22 +38,86 @@ const Navbar = () => {
     },
   ];
 
+  const fetchData = async (method,url) =>{
+    try {
+      const data = await getData(method, url)
+      setSearchedUser(data.data)
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
+  const handleSubmit = (value) => {
+    if(value){
+
+      setTimeout(() => {
+        fetchData("get", `http://localhost:5000/api/user/${value}`)
+      }, 200);
+    }else{
+      setSearchedUser(null)
+    }
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+    },
+
+    onSubmit: handleSubmit,
+  });
+
+  useEffect(()=>{
+    handleSubmit(formik.values.name)
+  },[formik.values.name])
+
   return (
     <div className="navbarContainer ">
       <div>
         <h2 style={{ textDecoration: "none", color: "white" }}>
-          <img src={CodeIcon}  className="icon-large  settingButton "></img> DevSite{" "}
+          <img src={CodeIcon} className="icon-large  settingButton "></img>{" "}
+          DevSite{" "}
         </h2>
       </div>
-      <div>
-        <ul>
-          <DropDown
-            mainButton={<img  src={GearIcon} className="icon " ></img>}
-            mainButtonRef={settingButtonRef}
-            buttons={button}
-          />
-        </ul>
-      </div>
+      {isLogin._id && (
+        <div className="navbarWidgetContainer">
+          <div>
+            <Form onSubmit={formik.handleSubmit}>
+              <Form.Group className="mb-3">
+                <Form.Control
+                  type="text"
+                  name="name"
+                  placeholder="Name of the user..."
+                  value={formik.values.name}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  isInvalid={formik?.errors?.name && formik.touched.name}
+                  autoComplete="off"
+                />
+                {formik.touched.name && formik.errors.name && (
+                  <Form.Control.Feedback type="invalid">
+                    <small style={{ color: "red" }}>
+                      *{formik.errors.name}
+                    </small>
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+            </Form>
+          </div>
+
+          <div>
+            <ul>
+              <DropDown
+                mainButton={<img src={GearIcon} className="icon "></img>}
+                mainButtonRef={settingButtonRef}
+                buttons={button}
+              />
+            </ul>
+          </div>
+          <div className="suggestionContainer">
+            <Suggestion data={searchedUser} setData={setSearchedUser} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

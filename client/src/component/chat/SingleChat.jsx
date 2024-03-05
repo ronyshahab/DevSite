@@ -77,7 +77,7 @@ const SingleChat = () => {
   }, [data]);
 
   return (
-    <div className="container">
+    <div className="chatContainer container">
       <div className="profileImg">
         <img className="round-img img" src={chatImg} alt="" />
       </div>

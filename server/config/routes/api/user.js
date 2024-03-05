@@ -21,14 +21,23 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:email", async (req, res) => {
-  const email = req.params.email;
+router.get("/:username", async (req, res) => {
+  const username = req.params.username;
   try {
-    const user = await User.find({ email: email });
-    res.send(user);
+    const allUser = await User.find();
+    const user = allUser.filter((user) => user.name.includes(username));
+    const filteredUser = user.map((element) => {
+      let payload = {
+        name: element.name,
+        avatar: element.avatar,
+        id: element._id,
+      };
+      return payload;
+    });
+    res.send(filteredUser);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server Error");
+    res.status(200).send("Server Error");
   }
 });
 router.post(
@@ -49,9 +58,13 @@ router.post(
 
     try {
       let user = await User.findOne({ email });
+      let accountName = await User.findOne({ name });
 
       if (user) {
         return res.status(400).json({ error: "user already exist" });
+      }
+      if (accountName) {
+        return res.status(400).json({ error: "Name is not available" });
       }
 
       if (req.file) {
@@ -93,7 +106,7 @@ router.post(
       });
     } catch (err) {
       console.log(err.message);
-      return res.status(500).send("server issue");
+      return res.status(500).send(err);
     }
   }
 );
@@ -112,6 +125,27 @@ router.put("/follow/:id", auth, async (req, res) => {
     }
 
     user.followers.unshift(requestedUser);
+    await user.save();
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+});
+router.put("/unfollow/:id", auth, async (req, res) => {
+  try {
+    const requestedUser = req.params.id;
+
+    const user = await User.findOne({ _id: req.user.id });
+    if (!user) {
+      return res.status(400).send("User not found");
+    }
+
+    if (!user.followers.includes(requestedUser)) {
+      return res.status(400).send("User is not followed");
+    }
+
+    user.followers.shift(requestedUser);
     await user.save();
 
     res.status(200).json(user);

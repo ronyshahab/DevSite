@@ -1,0 +1,16 @@
+.navbarWidgetContainer{
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 1em;
+    position: relative;
+}
+
+.navbarWidgetContainer form .mb-3{
+    margin-bottom: 0 !important;
+}
+
+.suggestionContainer{
+    position: absolute;
+    top: 3em;
+}

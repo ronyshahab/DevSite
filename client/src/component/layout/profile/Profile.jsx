@@ -14,6 +14,7 @@ import {
 import axios from "axios";
 import "./profile.css";
 import ShowPost from "../posts/ShowPost";
+import Follow from "../../smallerComponent/follow/Follow";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -25,30 +26,30 @@ const Profile = () => {
   const fileInputRef = useRef();
   let currentUser = useSelector((s) => s.currentUser);
 
-  const fetchData = async () => {
-    console.log("fetch data is called")
-    const userId = id? id : currentUser.user._id
+  const fetchData = () => {
+    const userId = id ? id : currentUser.user._id;
     try {
-      const data = await getData(
+      getData(
         "get",
-        `http://localhost:5000/api/profile/user/${userId}`
+        `http://localhost:5000/api/profile/user/${userId}`,
+        {},
+        setProfileData
       );
-      setProfileData(data.data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const fetchPostData = async () => {
+  const fetchPostData = () => {
     try {
-      if(profileData.user?._id){
-
-        const data = await getData(
+      if (profileData.user?._id) {
+        getData(
           "get",
-          `http://localhost:5000/api/post/user/${profileData.user?._id}`
-          );
-          setPostData(data.data);
-        }
+          `http://localhost:5000/api/post/user/${profileData.user?._id}`,
+          {},
+          setPostData
+        );
+      }
     } catch (error) {
       console.log(error);
     }
@@ -81,11 +82,9 @@ const Profile = () => {
     }
   }
   useEffect(() => {
-    if(currentUser.user){
+   fetchData();
+  }, [id]);
 
-      fetchData();
-    }
-  }, [currentUser]);
   const handleImageClick = () => {
     if (!id) {
       fileInputRef.current.click();
@@ -133,6 +132,7 @@ const Profile = () => {
     }
   }, [profileData]);
 
+
   return (
     <>
       {profileData &&
@@ -140,14 +140,18 @@ const Profile = () => {
       Object.keys(profileData).length !== 0 ? (
         <>
           <div className="container">
-            {currentUser.user && currentUser.user._id !== id ? (
-              <button
-              className="btn btn-primary"
-              style={{ marginBottom: "1em" }}
-              onClick={()=> navigate(`/chat/${id}`)}
-            >
-              Message
-            </button>
+            <div className="btnContainer">
+            {id && currentUser.user?._id !== id ? (
+              <>
+                <button
+                  className="btn btn-primary"
+                  style={{ marginBottom: "1em" }}
+                  onClick={() => navigate(`/chat/${id}`)}
+                >
+                  Message
+                </button>
+                <Follow id={id}/>
+              </>
             ) : (
               <button
                 className="btn btn-primary"
@@ -165,6 +169,8 @@ const Profile = () => {
             >
               Posts
             </button>
+            </div>
+            
 
             <div className="profileContainer">
               <div className="profileBanger">
@@ -271,14 +277,18 @@ const Profile = () => {
           <div className="profilePostContainer">
             {postData?.length > 0 ? (
               <>
-                <div className="profilePost">{postData.map((post, index)=>{
-                  return (
-                    <div key={index} onClick={()=> navigate(`/post/${post._id}`)}>
-
-                    <ShowPost  content={post.content}/>
-                    </div>
-                  )
-                })}</div>
+                <div className="profilePost">
+                  {postData.map((post, index) => {
+                    return (
+                      <div
+                        key={index}
+                        onClick={() => navigate(`/post/${post._id}`)}
+                      >
+                        <ShowPost content={post.content} />
+                      </div>
+                    );
+                  })}
+                </div>
               </>
             ) : (
               ""

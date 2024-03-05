@@ -17,7 +17,10 @@
 
 .container{
     position: relative;
-    height: 95vh;
+}
+
+.chatContainer{
+    height: 95vh !important;
 }
 .chatInputContainer{
     position: fixed;

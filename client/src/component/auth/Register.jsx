@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Modal, Form, Button } from "react-bootstrap";
 import axios from "axios";
@@ -6,8 +6,6 @@ import { useFormik } from "formik";
 import { Alert } from "../smallerComponent/Toast";
 import { registerSchema } from "../../validation/Validation";
 import RegisterImage from "../../assets/photo-editing-software-illustration-design-concept-illustration-websites-landing-pages-mobile-applications-posters-banners_108061-917.avif";
-import { setCurrentUser } from "../../redux/slices/CurrentUser.slice";
-const bcrypt = require("bcryptjs");
 
 const Register = ({ show, handleClose, openLogin }) => {
   const navigate = useNavigate();
@@ -22,7 +20,6 @@ const Register = ({ show, handleClose, openLogin }) => {
   const postUser = async (values) => {
     try {
       const res = await axios.post(`http://localhost:5000/api/user`, values, config);
-      // setCurrentUser(res.data.email)
       if (res) {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("email", formik.values.email);
@@ -36,28 +33,15 @@ const Register = ({ show, handleClose, openLogin }) => {
     }
   };
 
-  const validator = async (userData, registerData) => {
-    const userPassword = userData.password;
-    const registerPassword = registerData.password;
-
-    const result = await bcrypt.compare(registerPassword, userPassword);
-    if (result) {
-      // Do something if passwords match
-    }
-  };
-
   const formData = new FormData();
-  const handleSubmit = async (values) => {
+  const handleSubmit =  (values) => {
+    const {name, email, password} = values
     formData.append("profileImage", uploadImage);
-    formData.append("name", formik.values.name);
-    formData.append("email", formik.values.email);
-    formData.append("password", formik.values.password);
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("password", password);
     
-    const user = await postUser(formData);
-
-    if (user) {
-      validator(user, values);
-    }
+     postUser(formData);
   };
 
   
@@ -78,11 +62,10 @@ const Register = ({ show, handleClose, openLogin }) => {
         <div>
           <h1>Sign Up</h1>
           <small>
-            Already have an account?{" "}
+            Already have an account?
             <a onClick={openLogin}>
-              {" "}
               <span className="text-primary"> login in </span>
-            </a>{" "}
+            </a>
           </small>
         </div>
       </div>
@@ -158,16 +141,7 @@ const Register = ({ show, handleClose, openLogin }) => {
                   name="avatar"
                   accept="image/*"
                   onChange={(e) => setUploadImage(e.target.files[0])}
-
-                  // onBlur={formik.handleBlur}
                 />
-                {/* {formik.touched.avatar && formik.errors.avatar && (
-                  <Form.Control.Feedback type="invalid">
-                    <small style={{ color: "red" }}>
-                      *{formik.errors.avatar}
-                    </small>
-                  </Form.Control.Feedback>
-                )} */}
               </Form.Group>
               <div className="btnContiner" style={{ marginTop: "1em" }}>
                 <Button variant="primary" type="submit">
@@ -180,7 +154,6 @@ const Register = ({ show, handleClose, openLogin }) => {
             </Form>
           </div>
           <div className="modalImgContainer">
-            {/* Replace the placeholder image source with your actual image source */}
             <img src={RegisterImage} alt="" />
           </div>
         </div>

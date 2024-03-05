@@ -8,9 +8,7 @@ import { Alert } from "../smallerComponent/Toast";
 import Input from "../smallerComponent/Input";
 import { educationSchema } from "../../validation/Validation";
 import { Form } from "react-bootstrap";
-import DatePickerComponent from "../smallerComponent/DateComponent";
 import {
-  resetSelectedEducation,
   setSelectedEducation,
 } from "../../redux/slices/SelectedEducation.slice";
 import { resetCurrentUser } from "../../redux/slices/CurrentUser.slice";
@@ -24,9 +22,6 @@ const AddEducation = () => {
 
   const educationFormData = useSelector((s) => s.selectedEducation);
 
-  // setEducationId(updatable
-  //   ? educationFormData[educationFormData.length - 1]
-  //   : undefined)
 
   const addEducation = async (method, url, data) => {
     const result = await getData(method, url, data);

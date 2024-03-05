@@ -1,26 +1,24 @@
 import React from "react";
-import axios from "axios";
-import {useDispatch} from "react-redux"
 import { useNavigate } from "react-router-dom";
 import { Modal, Form, Button, FormGroup } from "react-bootstrap";
 import { Alert } from "../smallerComponent/Toast";
 import { useFormik } from "formik";
 import { loginSchema } from "../../validation/Validation";
 import LoginImage from "../../assets/illustration-cartoon-female-user-entering-login_241107-682.avif";
-import { setCurrentUser } from "../../redux/slices/CurrentUser.slice";
+import getData from "../../commonFunction/getDataFromAxios";
 
 function Login({ show, handleClose, openRegister }) {
   const navigate = useNavigate();
-  const dispatch = useDispatch()
   let TOKEN;
 
   const getToken = async (value) => {
     const { email, password } = value;
     try {
-      const data = await axios.post(`http://localhost:5000/api/auth`, {
+      const data = await getData("post", `http://localhost:5000/api/auth`, {
         email,
         password,
-      });
+      } )
+      
       if(data.data.errors){
         Alert("error", "Invalid Credentials", "light");
         return

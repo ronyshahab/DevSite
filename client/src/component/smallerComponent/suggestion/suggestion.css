@@ -1,0 +1,19 @@
+.searchedUserContainer{
+    background-color: rgb(247, 247, 247);
+    border: 2px solid grey;
+    width: 200px;
+    padding: 1em 0;
+}
+
+.searchedUser{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1em;
+    padding:  0 0.5em;
+    
+}
+
+.hideSearchedUserContainer{
+    display: none;
+}

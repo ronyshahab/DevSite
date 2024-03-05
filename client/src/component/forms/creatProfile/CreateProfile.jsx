@@ -3,7 +3,6 @@ import Input from "../../smallerComponent/Input";
 import { useFormik } from "formik";
 import getData from "../../../commonFunction/getDataFromAxios";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { Form } from "react-bootstrap";
 import SelectComponent from "../../smallerComponent/SelectComponent";
 import { createProileSchema } from "../../../validation/Validation";
@@ -11,7 +10,6 @@ import "./createProfile.css";
 import { Alert } from "../../smallerComponent/Toast";
 const CreateProfile = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [profileData, setProfileData] = useState([]);
 
   const editProfile = async (method, url, data) => {
@@ -59,18 +57,8 @@ const CreateProfile = () => {
 
     validationSchema: createProileSchema,
   });
-
-  const fetchData = async () => {
-    try {
-      const data = await getData("get", "/profile/me");
-      setProfileData(data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
   useEffect(() => {
-
-    fetchData();
+    getData("get", "profile/me", {}, setProfileData)
   }, []);
 
   useEffect(() => {
@@ -108,8 +96,6 @@ const CreateProfile = () => {
     array.splice(e, 1);
     formik.setFieldValue("skills", array);
   };
-
-  useEffect(() => {}, [formik.values.skills]);
 
   return (
     <div>

@@ -3,10 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import TextEditor from "../../smallerComponent/TextEditor/TextEditor";
 import axios from "axios";
 import getData from "../../../commonFunction/getDataFromAxios";
-// import {Content} from "tiptap"
 import "./post.css";
 import ShowPost from "./ShowPost";
 import { useSelector } from "react-redux";
+import Follow from "../../smallerComponent/follow/Follow";
 const Posts = () => {
   const navigate = useNavigate();
 
@@ -100,6 +100,7 @@ const Posts = () => {
                   alt=""
                   onClick={() => navigate(`/profile/${post.user}`)}
                 />
+                <Follow id={post.user}/>
                 <p className="text-primary"> {post.name}</p>
               </div>
               <div className="postDetail">

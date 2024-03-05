@@ -12,3 +12,7 @@
     padding: 1em;
 }
 
+.btnContainer{
+    display: flex;
+}
+

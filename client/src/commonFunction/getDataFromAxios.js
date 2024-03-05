@@ -12,11 +12,19 @@ const createAxiosInstance = (token) => {
   return axiosInstance;
 };
 
-const getData = async (method, url, data = {}) => {
+const getData = async (method, url, data = {}, setData) => {
   const token = localStorage.getItem("token");
   const axiosInstance = createAxiosInstance(token);
-  const result = await axiosInstance[method](url, { ...data });
-  return result;
+  try {
+    const result = await axiosInstance[method](url, { ...data });
+    if (setData) {
+      setData(result.data);
+      return;
+    }
+    return result;
+  } catch (error) {
+    return error;
+  }
 };
 
 export default getData;
