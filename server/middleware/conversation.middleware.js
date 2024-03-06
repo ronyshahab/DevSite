@@ -1,4 +1,5 @@
 const conversation = require("../models/Conversations.js");
+const User = require("../models/User.js");
 
 module.exports = async (req, res, next) => {
   const currentUserId = req.user.id;
@@ -25,10 +26,18 @@ module.exports = async (req, res, next) => {
         users: [currentUserId, requestedUserId],
         messages: [],
       });
+      await User.findOneAndUpdate(
+        { _id: currentUserId },
+        { $push: { conversationIds: conversationInstance?._id } }
+      );
+      await User.findOneAndUpdate(
+        { _id: requestedUserId },
+        { $push: { conversationIds: conversationInstance?._id } }
+      );
     }
     req.conversation = conversationInstance;
     next();
   } catch (err) {
-    res.status(401).json({ msg: "token is not valid" });
+    res.status(401).json({ msg: err.message });
   }
 };

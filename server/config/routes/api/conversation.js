@@ -1,21 +1,27 @@
 const express = require("express");
 const router = express.Router();
-const conversation = require("../../../models/Conversations.js");
 const auth = require("../../../middleware/auth.js");
 const { check, validationResult } = require("express-validator");
 const conversationMiddleware = require("../../../middleware/conversation.middleware.js");
+const checkNotificationMiddleware = require("../../../middleware/popNotificationMsg.middleware.js");
 
-router.get("/:id", auth, conversationMiddleware, async (req, res) => {
-  try {
-    if (req.conversation) {
-      res.status(200).send(req.conversation);
-    } else {
-      res.status(400).send(req.conversation);
+router.get(
+  "/:id",
+  auth,
+  conversationMiddleware,
+  checkNotificationMiddleware,
+  async (req, res) => {
+    try {
+      if (req.conversation) {
+        res.status(200).send(req.conversation);
+      } else {
+        res.status(400).send(req.conversation);
+      }
+    } catch (error) {
+      res.status(500).json({ error: error.msg });
     }
-  } catch (error) {
-    res.status(500).json({ error: error.msg });
   }
-});
+);
 
 router.post(
   "/:id",
@@ -37,7 +43,7 @@ router.post(
       };
       const convo = req.conversation;
       convo.messages.push(payload);
-
+      convo.set("newMsg", req.user.id);
       await convo.save();
       res.status(200).json(convo);
     } catch (error) {

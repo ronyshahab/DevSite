@@ -8,6 +8,7 @@ const conversationSchema = new Schema({
       ref: "User", // Reference the user model
     },
   ],
+  newMsg: { type: String },
   messages: [
     {
       sender: {

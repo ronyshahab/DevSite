@@ -26,6 +26,12 @@ const UserSchema = new mongoose.Schema({
       ref: "users",
     },
   ],
+  conversationIds: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Conversation",
+    },
+  ],
   date: {
     type: Date,
     default: Date.now,
