@@ -27,7 +27,6 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    // const io = require("../../../server.js");
 
     try {
       const message = req.body.message;
@@ -40,7 +39,6 @@ router.post(
       convo.messages.push(payload);
 
       await convo.save();
-      // io.to(convo._id).emit("newMessage");
       res.status(200).json(convo);
     } catch (error) {
       res.status(500).json({ err: error.msg });

@@ -27,7 +27,7 @@ const Profile = () => {
   let currentUser = useSelector((s) => s.currentUser);
 
   const fetchData = () => {
-    const userId = id ? id : currentUser.user._id;
+    const userId = id ? id : currentUser?.user?._id;
     try {
       getData(
         "get",
@@ -82,7 +82,7 @@ const Profile = () => {
     }
   }
   useEffect(() => {
-   fetchData();
+    fetchData();
   }, [id]);
 
   const handleImageClick = () => {
@@ -132,7 +132,6 @@ const Profile = () => {
     }
   }, [profileData]);
 
-
   return (
     <>
       {profileData &&
@@ -141,36 +140,35 @@ const Profile = () => {
         <>
           <div className="container">
             <div className="btnContainer">
-            {id && currentUser.user?._id !== id ? (
-              <>
+              {id && currentUser.user?._id !== id ? (
+                <>
+                  <button
+                    className="btn btn-primary"
+                    style={{ marginBottom: "1em" }}
+                    onClick={() => navigate(`/chat/${id}`)}
+                  >
+                    Message
+                  </button>
+                  <Follow id={id} />
+                </>
+              ) : (
                 <button
                   className="btn btn-primary"
                   style={{ marginBottom: "1em" }}
-                  onClick={() => navigate(`/chat/${id}`)}
+                  onClick={handleChange}
                 >
-                  Message
+                  Dashboard
                 </button>
-                <Follow id={id}/>
-              </>
-            ) : (
+              )}
+
               <button
                 className="btn btn-primary"
                 style={{ marginBottom: "1em" }}
-                onClick={handleChange}
+                onClick={() => navigate("/posts")}
               >
-                Dashboard
+                Posts
               </button>
-            )}
-
-            <button
-              className="btn btn-primary"
-              style={{ marginBottom: "1em" }}
-              onClick={() => navigate("/posts")}
-            >
-              Posts
-            </button>
             </div>
-            
 
             <div className="profileContainer">
               <div className="profileBanger">

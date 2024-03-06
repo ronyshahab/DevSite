@@ -14,6 +14,7 @@ import AuthGuard from "./component/smallerComponent/AuthGuard";
 import LoggedInUser from "./component/smallerComponent/LoggedInUser";
 import SingleChat from "./component/chat/SingleChat";
 import io from "socket.io-client";
+import Group from "./component/layout/group/Group";
 const Profiles = lazy(() => import("./component/layout/profile/Profiles"));
 const Profile = lazy(() => import("./component/layout/profile/Profile"));
 const CreateProfile = lazy(() =>
@@ -134,6 +135,16 @@ const App = () => {
                 <AuthGuard>
                   <LoggedInUser>
                     <Post />
+                  </LoggedInUser>
+                </AuthGuard>
+              }
+            ></Route>
+            <Route
+              path="group"
+              element={
+                <AuthGuard>
+                  <LoggedInUser>
+                    <Group />
                   </LoggedInUser>
                 </AuthGuard>
               }

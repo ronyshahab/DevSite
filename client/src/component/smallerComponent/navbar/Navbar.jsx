@@ -11,12 +11,14 @@ import { Form } from "react-bootstrap";
 import { useFormik } from "formik";
 import getData from "../../../commonFunction/getDataFromAxios";
 import Suggestion from "../suggestion/Suggestion";
+import Group from "../../layout/group/Group";
 
 const Navbar = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [searchedUser, setSearchedUser] = useState(null)
+  const [showFollower, setShowFollower] = useState(false)
 
   const isLogin = useSelector( (s) => s.currentUser)
 
@@ -35,6 +37,11 @@ const Navbar = () => {
       label:
         ' <i class="fa-solid fa-arrow-right-from-bracket"></i> <span>Logout</span>',
       onClick: handleLogoutClick,
+    },
+    {
+      label:
+        ' <i class="fa-solid fa-people-arrows"></i> <span>Follower</span>',
+      onClick: ()=> setShowFollower(true),
     },
   ];
 
@@ -118,6 +125,9 @@ const Navbar = () => {
           </div>
         </div>
       )}
+      {
+        showFollower && (<Group show={showFollower} setShow={setShowFollower}/>)
+      }
     </div>
   );
 };

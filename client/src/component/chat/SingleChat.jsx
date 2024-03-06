@@ -20,8 +20,7 @@ const SingleChat = () => {
 
   const fetchData = async (method, url, config) => {
     try {
-      const data = await getData(method, url, config);
-      setData(data.data);
+      const data = await getData(method, url, config, setData);
       if (data) {
         const profileImg = await getData(
           "get",

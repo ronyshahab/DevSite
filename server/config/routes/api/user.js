@@ -110,6 +110,28 @@ router.post(
     }
   }
 );
+router.post("/followerData/followers", auth, async (req, res) => {
+  try {
+    const followerArray = req.body.followerArray;
+    let followerDataArray = [];
+    const allFollower = await User.find();
+    followerArray.forEach((id) => {
+      allFollower.find((user) => {
+        if (user._id == id) {
+          let payload = {
+            name: user.name,
+            avatar: user.avatar,
+            id: user._id,
+          };
+          followerDataArray.push(payload);
+        }
+      });
+    });
+    res.status(200).json(followerDataArray);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
 
 router.put("/follow/:id", auth, async (req, res) => {
   try {
