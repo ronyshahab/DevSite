@@ -32,7 +32,6 @@ const Follow = ({ id }) => {
         <div>
           <button
             className="btn btn-primary"
-            style={{ marginBottom: "1em" }}
             onClick={() => followUser()}
           >
             {doesFollow ? "Unfollow" : "Follow"}

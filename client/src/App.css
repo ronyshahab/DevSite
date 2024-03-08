@@ -108,6 +108,9 @@ li a{
 .text-primary {
   color: #4b2fcc !important;
 }
+.text-extra-small {
+  font-size: 15px;
+}
 .round-img {
   border-radius: 50%;
 }

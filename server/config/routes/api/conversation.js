@@ -4,6 +4,8 @@ const auth = require("../../../middleware/auth.js");
 const { check, validationResult } = require("express-validator");
 const conversationMiddleware = require("../../../middleware/conversation.middleware.js");
 const checkNotificationMiddleware = require("../../../middleware/popNotificationMsg.middleware.js");
+const User = require("../../../models/User.js");
+const Conversations = require("../../../models/Conversations.js");
 
 router.get(
   "/:id",
@@ -51,22 +53,23 @@ router.post(
     }
   }
 );
-// router.delete("/:id", auth, conversationMiddleware, async (req, res) => {
-//   const errors = validationResult(req);
-//   if (!errors.isEmpty()) {
-//     return res.status(400).json({ errors: errors.array() });
-//   }
-//   try {
-//     const convo = req.conversation;
+router.post("/check/notification", auth, async (req, res) => {
+  try {
+    let notification = [];
+    const currentUserConversationsId = req.body.conversationIds;
+    const result = await Conversations.find({
+      _id: { $in: currentUserConversationsId },
+    });
 
-//     convo.messages = convo.messages.filter(({ id }) => id !== req.params.id);
-
-//     await convo.save();
-
-//     return res.json(convo);
-//   } catch (error) {
-//     res.status(500).json({ err: error.msg });
-//   }
-// });
+    result.forEach((con) => {
+      if (con?.newMsg) {
+        notification.push(con?.newMsg);
+      }
+    });
+    res.status(200).json(notification);
+  } catch (error) {
+    res.status(500).json({ err: error.msg });
+  }
+});
 
 module.exports = router;

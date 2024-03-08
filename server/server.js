@@ -45,8 +45,8 @@ io.on("connection", (socket) => {
     console.log(socket.id, "joins", roomID);
     socket.join(roomID);
   });
-  socket.on("changeMsg", (roomID) => {
-    io.to(roomID).emit("newMessage");
+  socket.on("changeMsg", (roomID, userId) => {
+    io.to(roomID).emit("newMessage", roomID, userId);
     console.log("newMessage event send to", roomID);
   });
 

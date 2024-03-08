@@ -1,29 +1,43 @@
-.navbarDropDownContainer{
-    position: relative;
+.navbarDropDownContainer {
+  position: relative;
 }
 
-.navbarDropDownContentContainer{
-    transition: all 0.3s;
-    overflow: hidden;
-    position: absolute;
-    opacity: 0;
-    top: 2em;
-    right: 1em;
+.navbarDropDownContentContainer {
+  transition: all 0.3s;
+  overflow: hidden;
+  position: absolute;
+  opacity: 0;
+  top: 2em;
+  right: 1em;
 
-    height: 0px;
-    width: 0px;
-    background-color: rgb(255, 255, 255);
-    border-radius: 15px;
-    box-shadow: 1px 9px 21px -4px rgba(0,0,0,0.7);
-    padding: 1em;
+  height: 0px;
+  width: 0px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 15px;
+  box-shadow: 1px 9px 21px -4px rgba(0, 0, 0, 0.7);
+  padding: 1em;
 }
 
 /* .navbarDropDownContent{
     height: 0px;
     width: 0px;
 } */
-.navbarDropDownContentContainer.active{
-    opacity: 1;
-    height: 200px;
-    width: 200px;
+.navbarDropDownContentContainer.active {
+  opacity: 1;
+  height: 200px;
+  width: 200px;
+}
+.DropDownContainer{
+    position: relative;
+}
+
+.notificationContainer{
+    position: absolute;
+    top: -8px;
+    left: 15px;
+    background-color: red;
+    color: white;
+    width: 15px;
+    border-radius: 50%;
+    text-align: center;
 }

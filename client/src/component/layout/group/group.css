@@ -20,3 +20,21 @@
     align-items: center;
     
 }
+
+.buttonContainer{
+    display: flex;
+}
+
+.imgContainer{
+    position: relative;
+}
+
+.hasNewMsgContainer.hasNewMsg{
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background-color: rgb(97, 228, 21);
+    top: -5px;
+    position: absolute;
+    left: 20px;
+}

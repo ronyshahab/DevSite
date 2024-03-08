@@ -5,33 +5,44 @@ import { useNavigate } from "react-router-dom";
 import { Form, Modal } from "react-bootstrap";
 import { useFormik } from "formik";
 import { resetCurrentUser } from "../../../redux/slices/CurrentUser.slice";
-import "./group.css"
+import "./group.css";
+import Follow from "../../smallerComponent/follow/Follow";
 
-const Group = ({show, setShow}) => {
+const Group = ({ show, setShow }) => {
   const [followerData, setFollowerData] = useState(null);
   const currentUser = useSelector((s) => s.currentUser);
+  const newMsg = useSelector((s) => s.newMsg);
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   useEffect(() => {
-    const config = { followerArray: currentUser?.user?.followers };
-    if (currentUser?.user?.followers) {
-      getData(
-        "post",
-        "http://localhost:5000/api/user/followerData/followers",
-        config,
-        setFollowerData
-      );
+    const followerArray = currentUser?.user?.followers;
+    if (followerArray) {
+      const totalArray = [...newMsg];
+      followerArray.forEach((element) => {
+        if (!newMsg.includes(element)) {
+          totalArray.push(element);
+        }
+      });
+      const config = { followerArray: totalArray };
+      if (currentUser?.user?.followers) {
+        getData(
+          "post",
+          "http://localhost:5000/api/user/followerData/followers",
+          config,
+          setFollowerData
+        );
+      }
     }
   }, [currentUser]);
 
-
   const handleSubmit = (value) => {
-    if(value){
-
-      const res = followerData.filter((element) => element.name.includes(value))
-      setFollowerData(res)
-    }else{
-      dispatch(resetCurrentUser())
+    if (value) {
+      const res = followerData.filter((element) =>
+        element.name.includes(value)
+      );
+      setFollowerData(res);
+    } else {
+      dispatch(resetCurrentUser());
     }
   };
 
@@ -43,15 +54,15 @@ const Group = ({show, setShow}) => {
     onSubmit: handleSubmit,
   });
 
-  useEffect(()=>{
-    handleSubmit(formik.values.name)
-  },[formik.values.name])
+  useEffect(() => {
+    handleSubmit(formik.values.name);
+  }, [formik.values.name]);
 
   return (
     <>
-      <Modal show={show} onHide={()=> setShow(false)}>
+      <Modal show={show} onHide={() => setShow(false)}>
         <Modal.Header closeButton>
-        <div className="groupHeaderContainer">
+          <div className="groupHeaderContainer">
             <Form onSubmit={formik.handleSubmit}>
               <Form.Group className="mb-3">
                 <Form.Control
@@ -73,7 +84,7 @@ const Group = ({show, setShow}) => {
                 )}
               </Form.Group>
             </Form>
-            </div>
+          </div>
         </Modal.Header>
         <Modal.Body>
           <div className=" followerWrapper">
@@ -81,26 +92,38 @@ const Group = ({show, setShow}) => {
               followerData.map((element, index) => {
                 return (
                   <div key={index} className="followeListContainer">
-
-                  <div
-                    className="followerContainer"
-                    onClick={() => navigate(`/profile/${element.id}`)}
+                    <div
+                      className="followerContainer"
+                      onClick={() => navigate(`/profile/${element.id}`)}
                     >
-                    <div>
-                      <img src={element.avatar} className="icon-large" alt="" />
+                      <div className={`imgContainer ${newMsg.includes(element.id)? "hasNewMsg" : ''}`}>
+                        <img
+                          src={element.avatar}
+                          className="icon-large"
+                          alt=""
+                        />
+                        <div className={`hasNewMsgContainer ${newMsg.includes(element.id)? "hasNewMsg" : ''}`}></div>
+                      </div>
+                      <div>{element.name}</div>
                     </div>
-                    <div>{element.name}</div>
-                  </div>
-                  <div>
-                    <button className="btn btn-primary" onClick={()=>{ setShow(false); navigate(`/chat/${element.id}`)}}>Chat</button>
-                  </div>
+                    <div className="buttonContainer">
+                      <Follow id={element.id} />
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => {
+                          setShow(false);
+                          navigate(`/chat/${element.id}`);
+                        }}
+                      >
+                        Chat
+                      </button>
                     </div>
+                  </div>
                 );
               })}
           </div>
         </Modal.Body>
       </Modal>
-      ;
     </>
   );
 };

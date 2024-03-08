@@ -4,23 +4,30 @@ import { Form } from "react-bootstrap";
 import getData from "../../commonFunction/getDataFromAxios";
 import { useParams } from "react-router-dom";
 import "./singleChat.css";
-import { useSelector } from "react-redux";
-import { io } from "socket.io-client";
-const SingleChat = () => {
+import { useDispatch, useSelector } from "react-redux";
+import { popNotification, pushNotification } from "../../redux/slices/Notification.slice";
+
+const SingleChat = ({socket}) => {
   const requestedUserId = useParams().id;
 
   const currentUser = useSelector((s) => s.currentUser);
   const [data, setData] = useState(null);
   const [chatImg, setChatImg] = useState();
-  const roomJoined = useRef(false);
+  // const roomJoined = useRef(false);
+  const dispatch = useDispatch()
+
+
   const handleSubmit = async (value) => {
     await fetchData("post", `/chat/${requestedUserId}`, value);
-    socket.emit("changeMsg", data._id);
+    socket.emit("changeMsg", data._id, currentUser.user._id);
   };
 
   const fetchData = async (method, url, config) => {
     try {
-      const data = await getData(method, url, config, setData);
+      const data = await getData(method, url, config);
+      setData(data.data)
+      // console.log(data)
+      dispatch(popNotification(requestedUserId))
       if (data) {
         const profileImg = await getData(
           "get",
@@ -41,7 +48,6 @@ const SingleChat = () => {
     onSubmit: handleSubmit,
   });
 
-  const socket = useMemo(() => io("http://localhost:5000"), []);
 
   const scrollDivToBottom = () => {
     const div = document.getElementById("messageContainer");
@@ -52,21 +58,14 @@ const SingleChat = () => {
 
   useEffect(() => {
     scrollDivToBottom();
-    return () => {
-      socket.disconnect();
-    };
   }, []);
   useEffect(() => {
     scrollDivToBottom();
     if (!data) {
       fetchData("get", `/chat/${requestedUserId}`);
     }
-    if (!roomJoined.current && data?._id) {
-      roomJoined.current = true;
-      socket.emit("joinRoom", data._id);
-    }
     socket.on("newMessage", () => {
-      console.log("new message recieved");
+      // console.log("new Message recived")
       fetchData("get", `/chat/${requestedUserId}`);
     });
 
