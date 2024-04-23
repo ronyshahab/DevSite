@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Input from "../../smallerComponent/Input";
 import { useFormik } from "formik";
 import getData from "../../../commonFunction/getDataFromAxios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Form } from "react-bootstrap";
 import SelectComponent from "../../smallerComponent/SelectComponent";
 import { createProileSchema } from "../../../validation/Validation";
@@ -318,9 +318,9 @@ const CreateProfile = () => {
               >
                 Submit
               </button>
-              <a className="btn btn-light my-1" onClick={() => navigate('/posts')}>
+              <Link className="btn btn-light my-1" onClick={() => navigate('/posts')}>
                 Go Back
-              </a>
+              </Link>
             </Form>{" "}
           </>
         )}

@@ -67,6 +67,30 @@ const AddEducation = () => {
     }
   }, []);
 
+  const handleSubmit = async () => {
+    const initialValues = formik.values
+    if (educationId !== undefined && educationId !== null) {
+      const res = await addEducation(
+        "put",
+        `/profile/education/${educationId}`,
+        initialValues
+      );
+      res && Alert("success", "Education edited successfully", 2000);
+      if (res.status == 200) {
+        dispatch(resetCurrentUser());
+      }
+    } else {
+      const res = await addEducation(
+        "put",
+        `/profile/education`,
+        initialValues
+      );
+      res && Alert("success", "Education added successfully", 2000);
+      if (res.status == 200) {
+        dispatch(resetCurrentUser());
+      }
+    }
+  }
   const formik = useFormik({
     initialValues: {
       school: "",
@@ -77,29 +101,7 @@ const AddEducation = () => {
       description: "",
     },
     validationSchema: educationSchema,
-    onSubmit: async (initialValues) => {
-      if (educationId !== undefined && educationId !== null) {
-        const res = await addEducation(
-          "put",
-          `/profile/education/${educationId}`,
-          initialValues
-        );
-        res && Alert("success", "Education edited successfully", 2000);
-        if (res.status == 200) {
-          dispatch(resetCurrentUser());
-        }
-      } else {
-        const res = await addEducation(
-          "put",
-          `/profile/education`,
-          initialValues
-        );
-        res && Alert("success", "Education added successfully", 2000);
-        if (res.status == 200) {
-          dispatch(resetCurrentUser());
-        }
-      }
-    },
+    onSubmit: handleSubmit    ,
   });
 
   return (
@@ -212,7 +214,7 @@ const AddEducation = () => {
               </Form.Control.Feedback>
             )}
           </Form.Group>
-          <input type="submit" className="btn btn-primary my-1" />
+          <button type="submit" onClick={handleSubmit} className="btn btn-primary my-1" >Submit </button>
           <Link className="btn my-1" to={"/dashboard"}>
             Go Back
           </Link>

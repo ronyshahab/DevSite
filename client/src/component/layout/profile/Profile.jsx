@@ -26,10 +26,10 @@ const Profile = () => {
   const fileInputRef = useRef();
   let currentUser = useSelector((s) => s.currentUser);
 
-  const fetchData = () => {
+  const fetchData = async() => {
     const userId = id ? id : currentUser?.user?._id;
     try {
-      getData(
+      const data =await getData(
         "get",
         `http://localhost:5000/api/profile/user/${userId}`,
         {},
@@ -86,7 +86,7 @@ const Profile = () => {
   }, [id]);
 
   const handleImageClick = () => {
-    if (!id) {
+    if (id == currentUser.user._id) {
       fileInputRef.current.click();
     }
   };
@@ -108,6 +108,7 @@ const Profile = () => {
         formData,
         config
       );
+      setProfileImgData(data.data?.profile?.avatar)
       if (data.status === 200) {
         dispatch(resetCurrentUser());
       }
@@ -185,7 +186,7 @@ const Profile = () => {
                     onChange={(e) => setProfileImgData(e.target.files[0])}
                   />
                   <img
-                    src={profileData.user.avatar}
+                    src={profileImgData}
                     className="round-img"
                     alt=""
                     onClick={handleImageClick}

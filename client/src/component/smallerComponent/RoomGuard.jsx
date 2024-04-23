@@ -43,7 +43,7 @@ const RoomGuard = () => {
 
     if(data.data) {
       data.data.forEach((element)=>{
-
+        if(element !== currentUser.user._id)
         dispatch(pushNotification(element))
       })
     }
@@ -52,7 +52,6 @@ const RoomGuard = () => {
   useEffect(() => {
     if (firstRender.current && currentUser._id) {
       socket.on("newMessage", (roomId, userId) => {
-        console.log(params["*"], userId)
         if (currentUser?.user?._id !== userId  && params['*'] !== `chat/${userId}`) {
           dispatch(pushNotification(userId));
         }

@@ -153,7 +153,7 @@ router.get("/user/:user_id", async (req, res) => {
   } catch (err) {
     console.error(err.message);
     if (err.kind == "ObjectId") {
-      return res.status(400).json({ msg: "Profile not found" });
+      return res.status(400).json({ error: err });
     }
     res.status(500).send("servor error");
   }
@@ -198,7 +198,6 @@ router.put(
 
     try {
       const profile = await Profile.findOne({ user: req.user.id });
-      // console.log(req.user.id)
       profile.experience.unshift(newExp);
 
       await profile.save();

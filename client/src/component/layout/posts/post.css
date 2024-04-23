@@ -5,7 +5,7 @@
     margin: 1em;
 }
 
-.postImg{
+/* .postImg{
 position: relative;
 top: -25px;
 display: flex;
@@ -14,7 +14,7 @@ justify-content: center;
 align-items: center;
 width: 100px;
 height: fit-content;
-}
+} */
 
 .postImg img{
     height: 40px;
@@ -41,7 +41,14 @@ height: fit-content;
     border-radius: 12px;
     background-color: rgb(226, 226, 226) !important;
 }
-
+.postHeaderContainer{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5em;
+    margin-top: -20px;
+}
 .postContentContainer{
     background-color: rgb(255, 255, 255);
     padding: 1em;

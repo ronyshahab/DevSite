@@ -9,7 +9,6 @@ const TableHeader = ({ data }) => {
       {
         <tr key="">
           {header.map((item, index) => {
-            // console.log(item)
             return <th key={index}>{capitalize(item)}</th>;
           })}
         </tr>

@@ -17,9 +17,6 @@ const Profiles = () => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log(profilesData);
-  }, [profilesData]);
   return (
     <div>
       {profilesData ? (

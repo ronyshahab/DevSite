@@ -7,6 +7,8 @@ import "./post.css";
 import ShowPost from "./ShowPost";
 import { useSelector } from "react-redux";
 import Follow from "../../smallerComponent/follow/Follow";
+import { Alert } from "../../smallerComponent/Toast";
+import Swal from "sweetalert2";
 const Posts = () => {
   const navigate = useNavigate();
 
@@ -21,6 +23,38 @@ const Posts = () => {
     }
   };
 
+  const showAlert = async () => {
+    const result = await Swal.fire({
+      title: "Item will be deleted permanently?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "Cancel",
+    });
+
+    if (result.isConfirmed) {
+      return true;
+    } else if (result.isDismissed) {
+      return false;
+    }
+  };
+  const handleDelete = async(id) =>{
+    try {
+      if(await showAlert()){
+
+        const data = await getData("delete",`http://localhost:5000/api/post/${id}`)
+        if(data){
+          Alert("success", "Post removed succesffuly")
+          setPostArray("")
+        }else{
+          Alert("danger", "Something went wrong!")
+        }
+      }
+    } catch (error) {
+      console.log(error.msg)
+    }
+  }
+
   const handleSubmission = async (submittedContent) => {
     const formData = new FormData();
     formData.append("content", submittedContent);
@@ -33,7 +67,16 @@ const Posts = () => {
     };
 
     try {
-      await axios.post(`http://localhost:5000/api/post`, formData, config);
+      const data = await axios.post(
+        `http://localhost:5000/api/post`,
+        formData,
+        config
+      );
+      if ((data.data.status = 200)) {
+        Alert("success", "Post added succesfully!");
+        setShowTextArea(false);
+        setPostArray("");
+      }
     } catch (error) {
       console.error(error);
     }
@@ -45,11 +88,11 @@ const Posts = () => {
     }
   }, [postArray]);
 
-  useEffect(()=>{
-    if(currentUser.msg){
-      navigate("/create-profile")
+  useEffect(() => {
+    if (currentUser.msg) {
+      navigate("/create-profile");
     }
-  },[currentUser])
+  }, [currentUser]);
 
   const addLike = async (post) => {
     const data = await getData(
@@ -60,8 +103,6 @@ const Posts = () => {
       fetchPost("get", "http://localhost:5000/api/post");
     }
   };
-
-  
 
   return (
     <div>
@@ -84,26 +125,39 @@ const Posts = () => {
           <p
             className="btn btn-primary"
             style={{ color: "white", width: "100vw", marginRight: "160px" }}
-            onClick={() => setShowTextArea((pre) => !pre)}          >
+            onClick={() => setShowTextArea((pre) => !pre)}
+          >
             Say something
           </p>
           {showTextArea && <TextEditor onSubmit={handleSubmission} />}
         </div>
-        {postArray.length > 0 &&
-          currentUser &&
-          currentUser.user ?
+        {postArray.length > 0 && currentUser && currentUser.user ? (
           postArray.map((post, index) => (
             <div className="postContainer" key={index}>
               <div className="postImg">
-                <img
-                  src={post.avatar}
-                  className="round-img profileImg"
-                  style={{ marginTop: "2em" }}
-                  alt=""
-                  onClick={() => navigate(`/profile/${post.user}`)}
-                />
-                <Follow id={post.user}/>
-                <p className="text-primary"> {post.name}</p>
+                <div className="postHeaderContainer">
+                  <div>
+                    <img
+                      src={post.avatar}
+                      className="round-img profileImg"
+                      style={{ marginTop: "2em" }}
+                      alt=""
+                      onClick={() => navigate(`/profile/${post.user}`)}
+                    />
+                    <Follow id={post.user} />
+                    <p className="text-primary"> {post.name}</p>
+                  </div>
+                  {
+                    currentUser.user._id == post.user &&
+                    <div className="deleteContainer">
+                    <i
+                      className="fa-solid fa-trash"
+                      style={{ color: "red" }}
+                      onClick={()=> handleDelete(post._id)}
+                      ></i>
+                  </div>
+                    }
+                </div>
               </div>
               <div className="postDetail">
                 <div className="postText">
@@ -135,9 +189,12 @@ const Posts = () => {
                 </div>
               </div>
             </div>
-          )) : <div className="warningContainer">
-              <h2>Please make a profile to see post</h2>
-            </div>}
+          ))
+        ) : (
+          <div className="warningContainer">
+            <h2>Please make a profile to see post</h2>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ const NotificationSlice = createSlice({
   initialState: [],
   reducers: {
     pushNotification: (state, action) => {
+      if(!state.includes(action.payload))
       state.push(action.payload);
     },
 

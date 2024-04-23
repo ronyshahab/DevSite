@@ -7,7 +7,6 @@ import {
 const Experience = ({ data }) => {
   const fromDate = dateFormate(data.from);
   const uptoDate = dateFormate(data.to);
-  // console.log(data);
   return (
     <div
       style={{ margin: "1em 0" }}

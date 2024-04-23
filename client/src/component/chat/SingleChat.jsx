@@ -13,7 +13,7 @@ const SingleChat = ({socket}) => {
   const currentUser = useSelector((s) => s.currentUser);
   const [data, setData] = useState(null);
   const [chatImg, setChatImg] = useState();
-  // const roomJoined = useRef(false);
+  const firsTime = useRef(true);
   const dispatch = useDispatch()
 
 
@@ -26,8 +26,12 @@ const SingleChat = ({socket}) => {
     try {
       const data = await getData(method, url, config);
       setData(data.data)
-      // console.log(data)
-      dispatch(popNotification(requestedUserId))
+      if(firsTime.current){
+
+        dispatch(popNotification(requestedUserId))
+        firsTime.current = false
+      }
+
       if (data) {
         const profileImg = await getData(
           "get",
@@ -65,13 +69,9 @@ const SingleChat = ({socket}) => {
       fetchData("get", `/chat/${requestedUserId}`);
     }
     socket.on("newMessage", () => {
-      // console.log("new Message recived")
       fetchData("get", `/chat/${requestedUserId}`);
     });
 
-    socket.on("response", () => {
-      console.log("response recived from server");
-    });
   }, [data]);
 
   return (

@@ -84,7 +84,7 @@ router.delete("/:id", auth, async (req, res) => {
       res.status(401).json({ msg: "You are not authorised" });
     }
     await post.remove();
-    res.send(post).json({ msg: "post removed" });
+    res.json({ msg: "post removed" });
   } catch (err) {
     if (err.kind !== "ObjectId") {
       res.status(400).json({ msg: "No post found" });

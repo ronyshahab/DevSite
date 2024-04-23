@@ -135,8 +135,8 @@ const Post = () => {
           </div>
           {currentUser.user &&
             currentPost.comments.length > 0 &&
-            currentPost.comments.map((comment) => (
-              <div className="commentContainer">
+            currentPost.comments.map((comment, index) => (
+              <div className="commentContainer" key={index}>
                 <div>
                   {" "}
                   <div>

@@ -25,7 +25,7 @@ const Dashboard = () => {
   }, []);
 
   const handleChange = () => {
-    navigate(-1);
+    navigate("/posts");
   };
 
   const updatable = false;
