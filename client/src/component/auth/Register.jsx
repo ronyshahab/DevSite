@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import { Alert } from "../smallerComponent/Toast";
 import { registerSchema } from "../../validation/Validation";
 import RegisterImage from "../../assets/photo-editing-software-illustration-design-concept-illustration-websites-landing-pages-mobile-applications-posters-banners_108061-917.avif";
+import { UserUrl } from "../../assets/url";
 
 const Register = ({ show, handleClose, openLogin }) => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const Register = ({ show, handleClose, openLogin }) => {
   };
   const postUser = async (values) => {
     try {
-      const res = await axios.post(`http://localhost:5000/api/user`, values, config);
+      const res = await axios.post(UserUrl, values, config);
       if (res) {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("email", formik.values.email);

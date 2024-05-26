@@ -119,6 +119,13 @@ const Post = () => {
                   style={{ height: "200px" }}
                   isInvalid={formik?.errors?.content && formik.touched.content}
                   onBlur={formik.handleBlur}
+                  onKeyDown={(e)=>{
+                    if(e.key == "Enter")
+                    {
+                      e.preventDefault();
+                      formik.submitForm()
+                    }
+                  }}   
                 />
                 {formik.touched.content && formik.errors.content && (
                   <Form.Control.Feedback type="invalid">

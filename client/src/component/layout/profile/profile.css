@@ -6,13 +6,18 @@
 .profilePostContainer .showPostContainer{
     max-height: 200px;
     overflow: hidden;
-    
-    box-shadow: 0px 4px 9px 0px rgba(0,0,0,0.75);
-    margin: 2em 1em;
     padding: 1em;
+    border-radius: 15px;
+    box-shadow: 0px 4px 9px 0px rgba(0,0,0,0.75);
+}
+
+.showpostContainer{
+    border-radius: 15px;
+    margin: 2em 1em;
+    /* box-shadow: 4px 0px 15px 8px rgba(0, 0, 0, 0.151)inset; */
+
 }
 
 .btnContainer{
     display: flex;
 }
-

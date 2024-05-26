@@ -5,7 +5,7 @@ const conversationSchema = new Schema({
   users: [
     {
       type: Schema.Types.ObjectId,
-      ref: "User", // Reference the user model
+      ref: "User",
     },
   ],
   newMsg: { type: String },
@@ -13,11 +13,11 @@ const conversationSchema = new Schema({
     {
       sender: {
         type: Schema.Types.ObjectId,
-        ref: "User", // Reference the user model for sender
+        ref: "User",
       },
       receiver: {
         type: Schema.Types.ObjectId,
-        ref: "User", // Reference the user model for receiver
+        ref: "User",
       },
       date: {
         type: Date,

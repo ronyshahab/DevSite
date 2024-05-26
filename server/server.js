@@ -1,11 +1,12 @@
 const express = require("express");
 const connectDB = require("./config/connect.js");
 const cors = require("cors");
+const config = require("config");
 const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: config.get("frontendUrl"),
   })
 );
 app.use(express.json({ extended: false }));
@@ -30,7 +31,7 @@ const server = app.listen(PORT, () => {
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:3000",
+    origin: config.get("frontendUrl"),
     // credentials: true,
   },
 });

@@ -276,6 +276,7 @@ const Profile = () => {
           <div className="profilePostContainer">
             {postData?.length > 0 ? (
               <>
+              <h2>My posts</h2>
                 <div className="profilePost">
                   {postData.map((post, index) => {
                     return (
@@ -283,7 +284,10 @@ const Profile = () => {
                         key={index}
                         onClick={() => navigate(`/post/${post._id}`)}
                       >
+                        <div className="showpostContainer">
+
                         <ShowPost content={post.content} />
+                        </div>
                       </div>
                     );
                   })}

@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import { loginSchema } from "../../validation/Validation";
 import LoginImage from "../../assets/illustration-cartoon-female-user-entering-login_241107-682.avif";
 import getData from "../../commonFunction/getDataFromAxios";
+import { AuthUrl } from "../../assets/url";
 
 function Login({ show, handleClose, openRegister }) {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ function Login({ show, handleClose, openRegister }) {
   const getToken = async (value) => {
     const { email, password } = value;
     try {
-      const data = await getData("post", `http://localhost:5000/api/auth`, {
+      const data = await getData("post", AuthUrl, {
         email,
         password,
       } )

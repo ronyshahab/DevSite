@@ -4,5 +4,7 @@
     "githubToken":"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",
     "CLOUDNAME":"dcscprdod",
 "APIKEY":"799484868918937",
-"APISECRET":"gdRuy8hzNBHhrcStWcerFjR_ZPw"
+"APISECRET":"gdRuy8hzNBHhrcStWcerFjR_ZPw",
+"frontendUrl":"http://localhost:3000"
+
 }

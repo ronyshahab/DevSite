@@ -1,8 +1,8 @@
 import axios from "axios";
+import { BaseUrl } from "../assets/url";
 const createAxiosInstance = (token) => {
-  const BASE_URL = "http://localhost:5000/api";
   const axiosInstance = axios.create({
-    baseURL: BASE_URL,
+    baseURL: BaseUrl,
     headers: {
       token: token,
       "Content-Type": "application/json",
